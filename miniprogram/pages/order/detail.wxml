@@ -1,0 +1,237 @@
+<!-- 文件路径: miniprogram/pages/order/detail.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <view wx:elif="{{error}}" class="empty">
+    <view class="empty__icon">🧾</view>
+    <view>{{error}}</view>
+    <button class="btn-ghost empty__btn" bindtap="goHome">返回首页</button>
+  </view>
+
+  <block wx:else>
+    <!-- 状态横幅：不同状态不同配色 -->
+    <view class="banner banner--{{order.status}}">
+      <view class="banner__status">{{order.statusMeta.label}}</view>
+      <view class="banner__desc">{{order.statusMeta.desc}}</view>
+      <view wx:if="{{order.status === 0 && order.payDeadline}}" class="banner__extra">
+        请在 {{order.payDeadline}} 前完成支付
+      </view>
+    </view>
+
+    <view class="body">
+      <!-- 商品卡 -->
+      <view class="card goods" bindtap="goProduct">
+        <image wx:if="{{order.product.coverUrl}}" class="goods__img" src="{{order.product.coverUrl}}" mode="aspectFill" />
+        <view wx:else class="goods__img goods__img--empty">无图</view>
+        <view class="goods__info">
+          <view class="goods__title">{{order.product.title || '商品信息缺失'}}</view>
+          <view class="goods__meta">{{order.product.categoryName || '校园二手'}}</view>
+          <view class="goods__bottom">
+            <text class="goods__price">¥{{order.product.priceText}}</text>
+            <text class="goods__count">× 1</text>
+          </view>
+        </view>
+        <text class="goods__arrow">›</text>
+      </view>
+
+      <!-- 地址 -->
+      <view wx:if="{{order.address}}" class="card addr">
+        <view class="addr__pin">📍</view>
+        <view class="addr__body">
+          <view class="addr__row">
+            <text class="addr__name">{{order.address.receiverName}}</text>
+            <text class="addr__phone">{{order.address.phone}}</text>
+          </view>
+          <view class="addr__detail">{{order.address.address}}</view>
+        </view>
+      </view>
+
+      <!-- 订单信息 -->
+      <view class="card info">
+        <view class="card__title">订单信息</view>
+        <view class="info__row">
+          <text class="info__label">订单号</text>
+          <text class="info__value">{{order.orderNo}}</text>
+          <text class="info__copy" catchtap="copyOrderNo">复制</text>
+        </view>
+        <view class="info__row">
+          <text class="info__label">成交金额</text>
+          <text class="info__value info__value--price">¥{{order.priceText}}</text>
+        </view>
+        <view class="info__row">
+          <text class="info__label">下单时间</text>
+          <text class="info__value">{{order.createTime}}</text>
+        </view>
+        <view wx:if="{{order.paymentTime}}" class="info__row">
+          <text class="info__label">支付时间</text>
+          <text class="info__value">{{order.paymentTime}}</text>
+        </view>
+        <view wx:if="{{order.shipTime}}" class="info__row">
+          <text class="info__label">发货时间</text>
+          <text class="info__value">{{order.shipTime}}</text>
+        </view>
+        <view wx:if="{{order.finishTime}}" class="info__row">
+          <text class="info__label">完成时间</text>
+          <text class="info__value">{{order.finishTime}}</text>
+        </view>
+        <view wx:if="{{order.cancelTime}}" class="info__row">
+          <text class="info__label">取消时间</text>
+          <text class="info__value">{{order.cancelTime}}</text>
+        </view>
+        <view wx:if="{{order.refundTime}}" class="info__row">
+          <text class="info__label">退款时间</text>
+          <text class="info__value">{{order.refundTime}}</text>
+        </view>
+        <view class="info__row">
+          <text class="info__label">买家</text>
+          <text class="info__value">{{order.buyerNickname || '—'}}</text>
+        </view>
+        <view class="info__row">
+          <text class="info__label">卖家</text>
+          <text class="info__value">{{order.sellerNickname || '—'}}</text>
+        </view>
+      </view>
+
+      <!-- 取消 / 退款原因 -->
+      <view wx:if="{{order.cancelReason}}" class="card reason reason--cancel">
+        <view class="reason__title">取消原因</view>
+        <view class="reason__text">{{order.cancelReason}}</view>
+      </view>
+      <view wx:if="{{order.refundReason}}" class="card reason reason--refund">
+        <view class="reason__title">退款原因</view>
+        <view class="reason__text">{{order.refundReason}}</view>
+      </view>
+      <view wx:if="{{order.rejectRefundReason}}" class="card reason reason--reject">
+        <view class="reason__title">拒绝退款原因</view>
+        <view class="reason__text">{{order.rejectRefundReason}}</view>
+        <view class="reason__tip">如仍有异议，可联系平台客服介入处理</view>
+      </view>
+
+      <!-- 评价区：已完成订单展示双方评价，未评价时给出入口 -->
+      <view wx:if="{{order.status === 3}}" class="card review-section">
+        <view class="card__title">
+          <text>交易评价</text>
+          <text wx:if="{{order.canReview}}" class="review-section__action" bindtap="handleReview">去评价 ›</text>
+        </view>
+
+        <block wx:if="{{reviewInfo && (reviewInfo.buyerReview || reviewInfo.sellerReview)}}">
+          <!-- 买家评卖家 -->
+          <view wx:if="{{reviewInfo.buyerReview}}" class="rv">
+            <view class="rv__head">
+              <text class="rv__from">买家评价</text>
+              <view class="rv__stars">
+                <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="rv__star {{reviewInfo.buyerReview.stars >= item ? 'rv__star--on' : ''}}">★</text>
+              </view>
+            </view>
+            <view class="rv__user">{{reviewInfo.buyerReview.reviewerNickname}}</view>
+            <view class="rv__content">{{reviewInfo.buyerReview.content || '（未填写文字）'}}</view>
+            <view wx:if="{{reviewInfo.buyerReview.images.length}}" class="rv__images">
+              <image
+                wx:for="{{reviewInfo.buyerReview.images}}"
+                wx:key="*this"
+                class="rv__img"
+                src="{{item}}"
+                mode="aspectFill"
+                data-field="buyerReview"
+                data-img-index="{{index}}"
+                bindtap="previewReviewImage"
+              />
+            </view>
+            <view wx:if="{{reviewInfo.buyerReview.followContent}}" class="rv__follow">
+              <text class="rv__follow-tag">追评：</text>
+              <text class="rv__follow-text">{{reviewInfo.buyerReview.followContent}}</text>
+            </view>
+            <view wx:if="{{reviewInfo.buyerReview.replyContent}}" class="rv__reply">
+              <text class="rv__reply-tag">卖家回复：</text>
+              <text class="rv__reply-text">{{reviewInfo.buyerReview.replyContent}}</text>
+            </view>
+          </view>
+
+          <!-- 卖家评买家 -->
+          <view wx:if="{{reviewInfo.sellerReview}}" class="rv">
+            <view class="rv__head">
+              <text class="rv__from">卖家评价</text>
+              <view class="rv__stars">
+                <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="rv__star {{reviewInfo.sellerReview.stars >= item ? 'rv__star--on' : ''}}">★</text>
+              </view>
+            </view>
+            <view class="rv__user">{{reviewInfo.sellerReview.reviewerNickname}}</view>
+            <view class="rv__content">{{reviewInfo.sellerReview.content || '（未填写文字）'}}</view>
+            <view wx:if="{{reviewInfo.sellerReview.followContent}}" class="rv__follow">
+              <text class="rv__follow-tag">追评：</text>
+              <text class="rv__follow-text">{{reviewInfo.sellerReview.followContent}}</text>
+            </view>
+          </view>
+        </block>
+
+        <view wx:else class="rv-empty">
+          <text class="rv-empty__text">双方都还没有评价</text>
+          <text wx:if="{{order.canReview}}" class="rv-empty__hint">完成评价后对方的信誉分会立即更新</text>
+          <text wx:else class="rv-empty__hint">可评价时间以交易完成时间为准，7 天内支持追评</text>
+        </view>
+      </view>
+
+      <!-- 状态时间线 -->
+      <view class="card timeline">
+        <view class="card__title">订单进度</view>
+        <view wx:for="{{logs}}" wx:key="id" class="tl">
+          <view class="tl__dot {{item.dotClass}}"></view>
+          <view wx:if="{{index < logs.length - 1}}" class="tl__line"></view>
+          <view class="tl__body">
+            <view class="tl__head">
+              <text class="tl__action">{{item.actionLabel}}</text>
+              <text class="tl__role">{{item.operatorRoleLabel}} · {{item.operatorName}}</text>
+            </view>
+            <view wx:if="{{item.remark}}" class="tl__remark">{{item.remark}}</view>
+            <view class="tl__time">{{item.createTime}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="card contact" bindtap="contactSeller">
+        <text class="contact__text">💬 联系卖家 / 客服</text>
+        <text class="contact__arrow">›</text>
+      </view>
+    </view>
+
+    <view class="bottom-space"></view>
+
+    <!-- 底部操作栏：由服务端下发的 canXxx 决定 -->
+    <view wx:if="{{buttons.length}}" class="action-bar">
+      <button
+        wx:for="{{buttons}}"
+        wx:key="key"
+        class="action-bar__btn {{item.key === 'cancel' || item.key === 'refund' || item.key === 'rejectRefund' || item.key === 'cancelRefund' || item.key === 'review' || item.key === 'remind' ? 'action-bar__btn--ghost' : 'action-bar__btn--primary'}}"
+        data-key="{{item.key}}"
+        loading="{{actionLoading && (item.key === 'pay' || item.key === 'receive' || item.key === 'ship' || item.key === 'agreeRefund')}}"
+        bindtap="onAction"
+      >
+        {{item.text}}
+      </button>
+    </view>
+  </block>
+
+  <!-- 退款 / 拒绝退款原因弹窗 -->
+  <view wx:if="{{reasonModal.visible}}" class="modal-mask" catchtap="closeReasonModal">
+    <view class="modal" catchtap="noop">
+      <view class="modal__title">{{reasonModal.title}}</view>
+      <textarea
+        class="modal__textarea"
+        value="{{reasonModal.value}}"
+        placeholder="{{reasonModal.placeholder}}"
+        placeholder-class="modal__placeholder"
+        maxlength="200"
+        bindinput="onReasonInput"
+        auto-height
+      />
+      <view class="modal__count">{{reasonModal.value.length}}/200</view>
+      <view class="modal__actions">
+        <view class="modal__btn" bindtap="closeReasonModal">取消</view>
+        <view class="modal__btn modal__btn--primary" bindtap="submitReason">提交</view>
+      </view>
+    </view>
+  </view>
+</view>

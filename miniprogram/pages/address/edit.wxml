@@ -1,0 +1,76 @@
+<!-- 文件路径: miniprogram/pages/address/edit.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <block wx:else>
+    <view class="form">
+      <view class="field">
+        <text class="field__label">收货人</text>
+        <input
+          class="field__input"
+          value="{{form.receiverName}}"
+          placeholder="请输入姓名"
+          placeholder-class="field__placeholder"
+          maxlength="20"
+          data-field="receiverName"
+          bindinput="onInput"
+        />
+      </view>
+      <view wx:if="{{errors.receiverName}}" class="field__error">{{errors.receiverName}}</view>
+
+      <view class="field">
+        <text class="field__label">联系电话</text>
+        <input
+          class="field__input"
+          value="{{form.phone}}"
+          type="number"
+          placeholder="请输入 11 位手机号"
+          placeholder-class="field__placeholder"
+          maxlength="11"
+          data-field="phone"
+          bindinput="onInput"
+        />
+      </view>
+      <view wx:if="{{errors.phone}}" class="field__error">{{errors.phone}}</view>
+
+      <view class="field field--textarea">
+        <text class="field__label">详细地址</text>
+        <textarea
+          class="field__textarea"
+          value="{{form.address}}"
+          placeholder="如：3号宿舍楼 502 / 图书馆东门 / 二食堂门口"
+          placeholder-class="field__placeholder"
+          maxlength="120"
+          auto-height
+          data-field="address"
+          bindinput="onInput"
+        />
+      </view>
+      <view wx:if="{{errors.address}}" class="field__error">{{errors.address}}</view>
+
+      <view class="field field--switch">
+        <view class="field__switch-text">
+          <text class="field__label">设为默认地址</text>
+          <text class="field__tip">下单时会自动选中</text>
+        </view>
+        <switch
+          checked="{{form.isDefault}}"
+          color="#FF6B35"
+          bindchange="onDefaultChange"
+        />
+      </view>
+    </view>
+
+    <view class="tips">校园交易建议填写宿舍楼、教学楼或约定见面点，方便当面交付</view>
+
+    <view class="bottom-space"></view>
+    <view class="action-bar">
+      <button class="action-bar__btn action-bar__btn--primary save-btn" loading="{{saving}}" bindtap="save">
+        保存地址
+      </button>
+    </view>
+  </block>
+</view>

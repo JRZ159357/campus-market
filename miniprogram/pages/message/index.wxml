@@ -1,0 +1,108 @@
+<!-- 文件路径: miniprogram/pages/message/index.wxml -->
+<view class="page">
+  <!-- 顶部 Tab -->
+  <view class="msg-tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="msg-tabs__item {{activeIndex === index ? 'msg-tabs__item--active' : ''}}"
+      data-index="{{index}}"
+      bindtap="onTabTap"
+    >
+      <text>{{item.label}}</text>
+      <text
+        wx:if="{{index === 0 && unread.chatUnread > 0}}"
+        class="badge"
+      >{{unread.chatUnread > 99 ? '99+' : unread.chatUnread}}</text>
+      <text
+        wx:if="{{index === 1 && unread.noticeUnread > 0}}"
+        class="badge"
+      >{{unread.noticeUnread > 99 ? '99+' : unread.noticeUnread}}</text>
+    </view>
+  </view>
+
+  <!-- 未登录 -->
+  <view wx:if="{{!sessions.length && !notices.length && loading === false}}" class="login-tip">
+    <text class="login-tip__text">登录后即可查看消息与通知</text>
+    <button class="login-tip__btn" size="mini" bindtap="goLogin">去登录</button>
+  </view>
+
+  <!-- 会话列表 -->
+  <block wx:if="{{activeIndex === 0}}">
+    <view
+      wx:for="{{sessions}}"
+      wx:key="id"
+      class="chat-item"
+      data-id="{{item.id}}"
+      bindtap="openChat"
+      bindlongpress="onSessionLongPress"
+    >
+      <view class="chat-item__avatar">
+        <text>{{item.avatarText}}</text>
+        <view wx:if="{{item.unread > 0}}" class="chat-item__dot"></view>
+      </view>
+      <view class="chat-item__body">
+        <view class="chat-item__row">
+          <text class="chat-item__name">{{item.peerNickname}}</text>
+          <text class="chat-item__time">{{item.timeText}}</text>
+        </view>
+        <view class="chat-item__row">
+          <text class="chat-item__preview">{{item.preview}}</text>
+          <text wx:if="{{item.unread > 0}}" class="chat-item__count">{{item.unread > 99 ? '99+' : item.unread}}</text>
+        </view>
+        <view wx:if="{{item.productTitle}}" class="chat-item__product">
+          <text class="chat-item__product-label">关联商品</text>
+          <text class="chat-item__product-title">{{item.productTitle}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!loading && !sessions.length}}" class="empty">
+      <view class="empty__icon">💬</view>
+      <view class="empty__title">还没有聊天</view>
+      <view class="empty__tip">在商品详情页点「联系卖家」就能开始咨询</view>
+    </view>
+  </block>
+
+  <!-- 通知列表 -->
+  <block wx:else>
+    <view wx:if="{{notices.length}}" class="notice-bar">
+      <text class="notice-bar__tip">共 {{notices.length}} 条通知</text>
+      <text class="notice-bar__action" bindtap="readAll">全部已读</text>
+    </view>
+
+    <view
+      wx:for="{{notices}}"
+      wx:key="id"
+      class="notice-item {{item.isRead === 0 ? 'notice-item--unread' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="openNotice"
+    >
+      <view class="notice-item__icon">{{item.icon}}</view>
+      <view class="notice-item__body">
+        <view class="notice-item__row">
+          <text class="notice-item__title">{{item.title}}</text>
+          <text class="notice-item__time">{{item.timeText}}</text>
+        </view>
+        <view class="notice-item__content">{{item.content}}</view>
+        <view class="notice-item__foot">
+          <text class="notice-item__type">{{item.typeLabel}}</text>
+          <text wx:if="{{item.isRead === 0}}" class="notice-item__dot">未读</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!loading && !notices.length}}" class="empty">
+      <view class="empty__icon">🔔</view>
+      <view class="empty__title">暂无通知</view>
+      <view class="empty__tip">订单变动、审核结果都会在这里提醒你</view>
+    </view>
+  </block>
+
+  <!-- 底部状态 -->
+  <view wx:if="{{loading}}" class="loading-tip">加载中…</view>
+  <view wx:elif="{{((activeIndex === 0 && sessions.length) || (activeIndex === 1 && notices.length)) && !hasMore}}" class="loading-tip">
+    没有更多了
+  </view>
+  <view class="bottom-space"></view>
+</view>

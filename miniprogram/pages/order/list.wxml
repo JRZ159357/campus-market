@@ -1,0 +1,120 @@
+<!-- 文件路径: miniprogram/pages/order/list.wxml -->
+<view class="page">
+  <!-- 我买到的 / 我卖出的 -->
+  <view class="role-switch">
+    <view
+      class="role-switch__item {{role === 'buyer' ? 'role-switch__item--active' : ''}}"
+      data-role="buyer"
+      bindtap="switchRole"
+    >
+      我买到的
+    </view>
+    <view
+      class="role-switch__item {{role === 'seller' ? 'role-switch__item--active' : ''}}"
+      data-role="seller"
+      bindtap="switchRole"
+    >
+      我卖出的
+    </view>
+  </view>
+
+  <!-- 状态标签 -->
+  <scroll-view scroll-x class="tabs" scroll-with-animation enable-flex>
+    <view
+      wx:for="{{tabs}}"
+      wx:key="label"
+      class="tabs__item {{active === item.value ? 'tabs__item--active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="switchTab"
+    >
+      {{item.label}}
+    </view>
+  </scroll-view>
+
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <!-- 空态 -->
+  <view wx:elif="{{empty}}" class="empty">
+    <view class="empty__icon">🧾</view>
+    <view class="empty__title">{{role === 'seller' ? '还没有卖出记录' : '还没有相关订单'}}</view>
+    <view class="empty__desc">{{role === 'seller' ? '发布商品后，买家下单就会出现在这里' : '去逛逛，把心仪的闲置带回家'}}</view>
+    <button class="btn-primary empty__btn" bindtap="goHome">去逛逛</button>
+  </view>
+
+  <!-- 订单列表 -->
+  <view wx:else class="list">
+    <view wx:for="{{list}}" wx:key="id" class="order">
+      <!-- 头部：订单号 + 状态 -->
+      <view class="order__head" data-no="{{item.orderNo}}" bindtap="goDetail">
+        <text class="order__no">{{item.orderNo}}</text>
+        <text class="tag {{item.statusMeta.className}}">{{item.statusMeta.label}}</text>
+      </view>
+
+      <!-- 商品行 -->
+      <view class="order__goods" data-no="{{item.orderNo}}" bindtap="goDetail">
+        <image wx:if="{{item.coverUrl}}" class="order__img" src="{{item.coverUrl}}" mode="aspectFill" />
+        <view wx:else class="order__img order__img--empty">无图</view>
+        <view class="order__info">
+          <view class="order__title">{{item.productTitle || '商品已删除'}}</view>
+          <view class="order__time">{{item.timeText}} 下单</view>
+        </view>
+        <view class="order__price">
+          <text class="order__amount">¥{{item.priceText}}</text>
+          <text class="order__count">×1</text>
+        </view>
+      </view>
+
+      <!-- 底部操作 -->
+      <view class="order__foot">
+        <text class="order__hint">
+          {{item.status === 1 && role === 'buyer' ? '等待卖家发货' : ''}}
+          {{item.status === 2 && role === 'buyer' ? '商品已发出，请及时确认' : ''}}
+          {{item.status === 2 && role === 'seller' ? '等待买家确认收货' : ''}}
+          {{item.status === 5 ? '退款申请处理中' : ''}}
+        </text>
+        <view class="order__actions">
+          <view class="order__btn" data-no="{{item.orderNo}}" bindtap="goDetail">查看详情</view>
+          <view
+            wx:for="{{item.actions}}"
+            wx:for-item="action"
+            wx:key="key"
+            class="order__btn {{action.primary ? 'order__btn--primary' : ''}}"
+            data-key="{{action.key}}"
+            data-no="{{item.orderNo}}"
+            catchtap="onAction"
+          >
+            {{action.text}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{loadingMore}}" class="loading-more">加载中…</view>
+    <view wx:elif="{{!hasMore && list.length}}" class="loading-more">没有更多了</view>
+  </view>
+
+  <!-- 退款原因弹窗 -->
+  <view wx:if="{{reasonModal.visible}}" class="modal-mask" catchtap="closeReasonModal">
+    <view class="modal" catchtap="noop">
+      <view class="modal__title">{{reasonModal.title}}</view>
+      <textarea
+        class="modal__textarea"
+        value="{{reasonModal.value}}"
+        placeholder="{{reasonModal.placeholder}}"
+        placeholder-class="modal__placeholder"
+        maxlength="200"
+        bindinput="onReasonInput"
+        auto-height
+      />
+      <view class="modal__count">{{reasonModal.value.length}}/200</view>
+      <view class="modal__actions">
+        <view class="modal__btn" bindtap="closeReasonModal">取消</view>
+        <view class="modal__btn modal__btn--primary" bindtap="submitReason">提交</view>
+      </view>
+    </view>
+  </view>
+</view>

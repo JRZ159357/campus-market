@@ -1,0 +1,158 @@
+<!-- 文件路径: miniprogram/pages/chat/index.wxml -->
+<view class="chat-page">
+  <!-- 顶部：对方信息 + 关联商品 + 连接状态 -->
+  <view class="chat-head">
+    <view class="chat-head__main">
+      <text class="chat-head__name">{{session.peerNickname || '聊天'}}</text>
+      <view class="chat-head__status">
+        <view class="dot {{wsStatus === 'connected' ? 'dot--on' : 'dot--off'}}"></view>
+        <text class="chat-head__status-text">{{wsStatus === 'connected' ? '实时连接中' : '连接中断，下拉刷新'}}</text>
+      </view>
+    </view>
+    <view class="chat-head__more" bindtap="onMore">⋯</view>
+  </view>
+
+  <!-- 关联商品快捷入口 -->
+  <view wx:if="{{session.productId}}" class="product-bar" bindtap="openProduct">
+    <image
+      wx:if="{{session.productCover}}"
+      class="product-bar__img"
+      src="{{session.productCover}}"
+      mode="aspectFill"
+    />
+    <view wx:else class="product-bar__img product-bar__img--empty">无图</view>
+    <view class="product-bar__body">
+      <text class="product-bar__title">{{session.productTitle || '关联商品'}}</text>
+      <text class="product-bar__tip">点击查看商品详情</text>
+    </view>
+    <text class="product-bar__arrow">›</text>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view
+    class="chat-body"
+    scroll-y
+    scroll-into-view="{{scrollInto}}"
+    scroll-with-animation
+    bindscrolltoupper="loadMore"
+    upper-threshold="60"
+  >
+    <view wx:if="{{loadingMore}}" class="more-tip">正在加载更早的消息…</view>
+    <view wx:elif="{{hasMore}}" class="more-tip">上滑加载更早的消息</view>
+    <view wx:elif="{{messages.length}}" class="more-tip">没有更早的消息了</view>
+
+    <view wx:for="{{messages}}" wx:key="id" class="msg-wrap">
+      <view wx:if="{{item.showTime}}" class="msg-time">{{item.timeText}}</view>
+
+      <!-- 系统消息：居中灰字 -->
+      <view wx:if="{{item.msgType === 3}}" class="sys-msg">
+        <text>{{item.content}}</text>
+      </view>
+
+      <!-- 普通消息 -->
+      <view wx:else class="msg-row {{item.self ? 'msg-row--self' : ''}}">
+        <view wx:if="{{!item.self}}" class="msg-avatar">{{peerAvatarText}}</view>
+
+        <view class="msg-content">
+          <!-- 文本 -->
+          <view
+            wx:if="{{item.msgType === 1}}"
+            class="bubble {{item.self ? 'bubble--self' : 'bubble--other'}}"
+          >{{item.content}}</view>
+
+          <!-- 图片 -->
+          <image
+            wx:elif="{{item.msgType === 2}}"
+            class="msg-image"
+            src="{{item.imageUrl}}"
+            mode="widthFix"
+            data-url="{{item.imageUrl}}"
+            bindtap="previewImage"
+          />
+
+          <!-- 商品卡片 -->
+          <view
+            wx:elif="{{item.msgType === 4}}"
+            class="card"
+            data-type="product"
+            data-id="{{item.card.productId}}"
+            bindtap="openCard"
+          >
+            <image wx:if="{{item.cardCover}}" class="card__img" src="{{item.cardCover}}" mode="aspectFill" />
+            <view wx:else class="card__img card__img--empty">无图</view>
+            <view class="card__body">
+              <text class="card__title">{{item.card.title || '商品'}}</text>
+              <text class="card__price">¥{{item.card.price}}</text>
+              <text class="card__tag">{{item.card.statusLabel}}</text>
+            </view>
+          </view>
+
+          <!-- 订单卡片 -->
+          <view
+            wx:elif="{{item.msgType === 5}}"
+            class="card"
+            data-type="order"
+            data-no="{{item.card.orderNo}}"
+            bindtap="openCard"
+          >
+            <image wx:if="{{item.cardCover}}" class="card__img" src="{{item.cardCover}}" mode="aspectFill" />
+            <view wx:else class="card__img card__img--empty">📦</view>
+            <view class="card__body">
+              <text class="card__title">{{item.card.title || '订单'}}</text>
+              <text class="card__no">{{item.card.orderNo}}</text>
+              <text class="card__price">¥{{item.card.price}}</text>
+              <text class="card__tag">{{item.card.statusLabel}}</text>
+            </view>
+          </view>
+
+          <view wx:else class="bubble bubble--other">{{item.content}}</view>
+        </view>
+
+        <view wx:if="{{item.self}}" class="msg-avatar msg-avatar--self">我</view>
+      </view>
+    </view>
+
+    <!-- 对方正在输入 -->
+    <view wx:if="{{peerTyping}}" class="typing">
+      <text>{{session.peerNickname || '对方'}} 正在输入…</text>
+    </view>
+
+    <view id="bottom-anchor" class="bottom-anchor"></view>
+  </scroll-view>
+
+  <!-- 底部输入区 -->
+  <view class="chat-foot">
+    <view wx:if="{{showEmoji}}" class="emoji-panel">
+      <view
+        wx:for="{{emojis}}"
+        wx:key="*this"
+        class="emoji-panel__item"
+        data-emoji="{{item}}"
+        bindtap="pickEmoji"
+      >{{item}}</view>
+    </view>
+
+    <view class="input-bar">
+      <view class="input-bar__icon" bindtap="toggleEmoji">😊</view>
+      <view class="input-bar__icon" bindtap="chooseImage">🖼</view>
+      <input
+        class="input-bar__input"
+        value="{{inputValue}}"
+        placeholder="说点什么…"
+        placeholder-class="input-bar__ph"
+        confirm-type="send"
+        cursor-spacing="24"
+        adjust-position="{{true}}"
+        bindinput="onInput"
+        bindconfirm="sendText"
+      />
+      <view class="input-bar__send {{inputValue ? 'input-bar__send--on' : ''}}" bindtap="sendText">发送</view>
+    </view>
+
+    <!-- 关联商品时提供「发送商品卡片」入口 -->
+    <view wx:if="{{session.productId}}" class="quick-bar">
+      <view class="quick-bar__btn" bindtap="sendProductCard">发送商品卡片</view>
+      <view class="quick-bar__btn" bindtap="openProduct">查看商品</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,45 @@
+<!-- 文件路径: miniprogram/pages/address/list.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <view wx:elif="{{empty}}" class="empty">
+    <view class="empty__icon">📍</view>
+    <view class="empty__title">还没有保存地址</view>
+    <view class="empty__desc">添加宿舍楼、教学楼或约定见面点，下单时一键选择</view>
+    <button class="btn-primary empty__btn" bindtap="goAdd">+ 新增地址</button>
+  </view>
+
+  <view wx:else class="list">
+    <view wx:for="{{list}}" wx:key="id" class="addr">
+      <view class="addr__main" data-id="{{item.id}}" bindtap="goEdit">
+        <view class="addr__row">
+          <text class="addr__name">{{item.receiverName}}</text>
+          <text class="addr__phone">{{item.phone}}</text>
+          <text wx:if="{{item.isDefault}}" class="addr__default">默认</text>
+        </view>
+        <view class="addr__detail">{{item.address}}</view>
+      </view>
+      <view class="addr__foot">
+        <view
+          class="addr__action {{item.isDefault ? 'addr__action--on' : ''}}"
+          data-id="{{item.id}}"
+          catchtap="handleDefault"
+        >
+          <text class="addr__radio">{{item.isDefault ? '●' : '○'}}</text>
+          <text>{{item.isDefault ? '默认地址' : '设为默认'}}</text>
+        </view>
+        <view class="addr__ops">
+          <text class="addr__op" data-id="{{item.id}}" catchtap="goEdit">编辑</text>
+          <text class="addr__op addr__op--danger" data-id="{{item.id}}" catchtap="handleDelete">删除</text>
+        </view>
+      </view>
+    </view>
+    <view class="bottom-space"></view>
+    <view class="action-bar">
+      <button class="action-bar__btn action-bar__btn--primary addr__add" bindtap="goAdd">+ 新增地址</button>
+    </view>
+  </view>
+</view>

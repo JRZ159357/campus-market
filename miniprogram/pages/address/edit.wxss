@@ -1,0 +1,90 @@
+/* 文件路径: miniprogram/pages/address/edit.wxss */
+.page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.form {
+  padding: 8rpx 28rpx;
+  border-radius: 20rpx;
+  background: #fff;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  min-height: 104rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.field:last-child {
+  border-bottom: none;
+}
+
+.field--textarea {
+  align-items: flex-start;
+  padding: 28rpx 0;
+}
+
+.field__label {
+  flex: none;
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.field__input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #222;
+  height: 104rpx;
+  line-height: 104rpx;
+}
+
+.field__textarea {
+  flex: 1;
+  min-height: 120rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #222;
+}
+
+.field__placeholder {
+  color: #c0c4cc;
+  font-size: 27rpx;
+}
+
+.field__error {
+  padding: 8rpx 0 0 160rpx;
+  font-size: 23rpx;
+  color: #f56c6c;
+}
+
+.field--switch {
+  justify-content: space-between;
+}
+
+.field__switch-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.field__tip {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+.tips {
+  margin-top: 24rpx;
+  padding: 0 12rpx;
+  font-size: 22rpx;
+  color: #aaa;
+  line-height: 1.7;
+}
+
+.save-btn {
+  flex: 1;
+}

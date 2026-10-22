@@ -1,0 +1,95 @@
+<!-- 文件路径: miniprogram/pages/order/confirm.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <view wx:elif="{{error}}" class="empty">
+    <view class="empty__icon">🧾</view>
+    <view>{{error}}</view>
+    <button class="btn-ghost empty__btn" bindtap="goHome">返回首页</button>
+  </view>
+
+  <block wx:else>
+    <!-- 地址卡 -->
+    <view class="card addr" bindtap="openAddress">
+      <view wx:if="{{address}}" class="addr__body">
+        <view class="addr__row">
+          <text class="addr__name">{{address.receiverName}}</text>
+          <text class="addr__phone">{{address.phone}}</text>
+          <text wx:if="{{address.isDefault}}" class="addr__default">默认</text>
+        </view>
+        <view class="addr__detail">{{address.address}}</view>
+      </view>
+      <view wx:else class="addr__empty">
+        <text class="addr__pin">📍</text>
+        <text>请选择收货 / 交易地址</text>
+      </view>
+      <text class="addr__arrow">›</text>
+    </view>
+
+    <!-- 商品卡 -->
+    <view class="card goods" bindtap="goProduct">
+      <image wx:if="{{product.coverUrl}}" class="goods__img" src="{{product.coverUrl}}" mode="aspectFill" />
+      <view wx:else class="goods__img goods__img--empty">无图</view>
+      <view class="goods__info">
+        <view class="goods__title">{{product.title}}</view>
+        <view class="goods__meta">{{product.categoryName || '校园二手'}} · 数量 1</view>
+        <view class="goods__price">¥{{product.priceText}}</view>
+      </view>
+    </view>
+
+    <!-- 交易提示 -->
+    <view class="card tips">
+      <view class="tips__title">交易提示</view>
+      <view class="tips__item">· 校园交易建议在校内公共场所当面验货、当面交付</view>
+      <view class="tips__item">· 确认收货前请仔细检查商品，有问题及时申请退款</view>
+      <view class="tips__item">· 下单后请在 30 分钟内完成支付，超时订单会自动取消</view>
+    </view>
+
+    <view class="bottom-space"></view>
+
+    <!-- 底部结算栏 -->
+    <view class="action-bar">
+      <view class="bar__total">
+        合计 <text class="bar__price">¥{{product.priceText}}</text>
+      </view>
+      <button class="action-bar__btn action-bar__btn--primary bar__submit" loading="{{submitting}}" bindtap="submit">
+        提交订单
+      </button>
+    </view>
+  </block>
+
+  <!-- 地址选择弹层 -->
+  <view wx:if="{{showAddress}}" class="mask" bindtap="closeAddress"></view>
+  <view class="sheet {{showAddress ? 'sheet--open' : ''}}">
+    <view class="sheet__head">
+      <text class="sheet__title">选择地址</text>
+      <text class="sheet__close" bindtap="closeAddress">✕</text>
+    </view>
+    <scroll-view scroll-y class="sheet__list">
+      <view
+        wx:for="{{addresses}}"
+        wx:key="id"
+        class="sheet__item {{item.id === address.id ? 'sheet__item--active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="chooseAddress"
+      >
+        <view class="sheet__main">
+          <view class="sheet__row">
+            <text class="sheet__name">{{item.receiverName}}</text>
+            <text class="sheet__phone">{{item.phone}}</text>
+            <text wx:if="{{item.isDefault}}" class="sheet__tag">默认</text>
+          </view>
+          <view class="sheet__detail">{{item.address}}</view>
+        </view>
+        <text class="sheet__check">{{item.id === address.id ? '✓' : ''}}</text>
+      </view>
+      <view wx:if="{{!addresses.length}}" class="sheet__empty">还没有地址，先添加一个吧</view>
+    </scroll-view>
+    <view class="sheet__footer">
+      <button class="btn-ghost" bindtap="goAddAddress">+ 新增地址</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,38 @@
+<!-- 文件路径: miniprogram/pages/notice/detail.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading">加载中…</view>
+
+  <block wx:elif="{{notice}}">
+    <view class="card">
+      <view class="card__head">
+        <view class="card__icon">{{icon}}</view>
+        <view class="card__head-body">
+          <text class="card__title">{{notice.title}}</text>
+          <view class="card__meta">
+            <text class="card__type">{{notice.typeLabel}}</text>
+            <text class="card__time">{{timeText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="card__divider"></view>
+
+      <text class="card__content">{{notice.content}}</text>
+    </view>
+
+    <view class="actions">
+      <button
+        wx:if="{{notice.target !== 'none'}}"
+        class="actions__btn"
+        bindtap="goRelated"
+      >{{notice.target === 'order' ? '查看订单' : '查看商品'}}</button>
+      <button class="actions__btn actions__btn--ghost" bindtap="goBack">返回</button>
+    </view>
+  </block>
+
+  <view wx:else class="empty">
+    <view class="empty__icon">🔔</view>
+    <view class="empty__title">通知不存在</view>
+    <view class="empty__tip">可能已被删除</view>
+  </view>
+</view>
