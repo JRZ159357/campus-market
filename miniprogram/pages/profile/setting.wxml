@@ -1,0 +1,92 @@
+<!-- 文件路径: miniprogram/pages/profile/setting.wxml -->
+<view class="page">
+  <!-- 通用设置 -->
+  <view class="card">
+    <view class="card__title">通用</view>
+
+    <view class="row" bindtap="goSecurity">
+      <view class="row__left">
+        <view class="row__name">账号与安全</view>
+        <view class="row__desc">登录方式、密码、手机号、学生认证</view>
+      </view>
+      <text class="row__arrow">›</text>
+    </view>
+
+    <view class="row" bindtap="clearCache">
+      <view class="row__left">
+        <view class="row__name">清除缓存</view>
+        <view class="row__desc">当前占用 {{cacheSize}}</view>
+      </view>
+      <text class="row__arrow">›</text>
+    </view>
+
+    <view class="row" bindtap="contactService">
+      <view class="row__left">
+        <view class="row__name">联系客服</view>
+        <view class="row__desc">工作时间 9:00 - 21:00</view>
+      </view>
+      <text class="row__arrow">›</text>
+    </view>
+
+    <view class="row" bindtap="goAbout">
+      <view class="row__left">
+        <view class="row__name">关于我们</view>
+        <view class="row__desc">版本 {{version}}</view>
+      </view>
+      <text class="row__arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout" bindtap="handleLogout">退出登录</view>
+
+  <!-- 注销账号：红色小字 -->
+  <view class="delete-link" bindtap="openDelete">注销账号</view>
+  <view class="note">注销后账号将被永久删除，在架商品全部下架，且无法恢复</view>
+
+  <!-- 注销账号弹层 -->
+  <view wx:if="{{showDelete}}" class="mask" bindtap="closeDelete">
+    <view class="dialog" catchtap="noop">
+      <view class="dialog__title">注销账号</view>
+      <view class="dialog__desc">
+        注销后：
+        <text class="dialog__dot">·</text>账号资料与历史记录将被标记删除
+        <text class="dialog__dot">·</text>你的全部在架商品会立即下架
+        <text class="dialog__dot">·</text>该操作不可恢复
+      </view>
+
+      <view class="field">
+        <input
+          class="field__input"
+          value="{{deletePassword}}"
+          password="{{true}}"
+          placeholder="请输入登录密码"
+          placeholder-class="field__placeholder"
+          data-field="deletePassword"
+          bindinput="onDeleteInput"
+        />
+      </view>
+
+      <view class="field">
+        <input
+          class="field__input"
+          value="{{deleteConfirm}}"
+          placeholder="请输入「注销账号」以确认"
+          placeholder-class="field__placeholder"
+          data-field="deleteConfirm"
+          bindinput="onDeleteInput"
+        />
+      </view>
+
+      <view wx:if="{{deleteError}}" class="field__error">{{deleteError}}</view>
+
+      <view class="dialog__actions">
+        <view class="dialog__btn" bindtap="closeDelete">取消</view>
+        <view
+          class="dialog__btn dialog__btn--danger {{submitting ? 'dialog__btn--disabled' : ''}}"
+          bindtap="confirmDelete"
+        >{{submitting ? '注销中…' : '确认注销'}}</view>
+      </view>
+    </view>
+  </view>
+</view>

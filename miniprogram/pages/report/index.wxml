@@ -1,0 +1,115 @@
+<!-- 文件路径: miniprogram/pages/report/index.wxml -->
+<view class="page">
+  <view class="page__body">
+    <!-- 被举报对象卡片 -->
+    <view wx:if="{{notFound}}" class="empty">
+      <view class="empty__icon">🚫</view>
+      <view class="empty__text">被举报的内容已不存在</view>
+      <view class="empty__hint">商品或评价被删除后就不能再举报了</view>
+    </view>
+
+    <block wx:elif="{{loading}}">
+      <view class="card target-card">
+        <view class="skeleton skeleton--cover"></view>
+        <view class="target-card__body">
+          <view class="skeleton skeleton--line"></view>
+          <view class="skeleton skeleton--line skeleton--short"></view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:else class="card target-card">
+      <view class="target-card__type" style="color:{{typeMeta.color}}">举报{{typeMeta.typeLabel}}</view>
+      <view class="target-card__main">
+        <image wx:if="{{target.cover}}" class="target-card__cover" src="{{target.cover}}" mode="aspectFill" />
+        <view wx:else class="target-card__cover target-card__cover--text">{{typeMeta.shortLabel}}</view>
+        <view class="target-card__body">
+          <view class="target-card__title">{{target.title}}</view>
+          <view class="target-card__extra">{{target.extra}}</view>
+        </view>
+      </view>
+      <view class="target-card__tip">
+        提交时会保存这份内容的快照，即使对方之后修改或删除，客服仍可依据快照核实
+      </view>
+    </view>
+
+    <!-- 举报原因 -->
+    <view class="card">
+      <view class="card__title">
+        举报原因<text class="card__required">*</text>
+      </view>
+      <view class="reasons">
+        <view
+          wx:for="{{reasons}}"
+          wx:key="value"
+          class="reason {{reasonIndex === index ? 'reason--active' : ''}}"
+          data-index="{{index}}"
+          bindtap="onReasonTap"
+        >
+          <view class="reason__label">{{item.label}}</view>
+          <view class="reason__desc">{{item.desc}}</view>
+        </view>
+      </view>
+      <view wx:if="{{errors.reason}}" class="field-error">{{errors.reason}}</view>
+    </view>
+
+    <!-- 详细描述 -->
+    <view class="card">
+      <view class="card__title">
+        详细描述<text class="card__required">*</text>
+        <text class="card__count">{{charCount}}/{{maxLength}}</text>
+      </view>
+      <textarea
+        class="textarea"
+        value="{{content}}"
+        placeholder="请说明具体问题，例如：实物与描述不符 / 收款后拒绝发货 / 索要微信转账。描述越具体，客服核实越快。"
+        placeholder-class="textarea__ph"
+        maxlength="{{maxLength}}"
+        bindinput="onContentInput"
+        auto-height
+      />
+      <view wx:if="{{errors.content}}" class="field-error">{{errors.content}}</view>
+    </view>
+
+    <!-- 证据图片 -->
+    <view class="card">
+      <view class="card__title">
+        证据图片
+        <text class="card__count">{{images.length}}/{{maxImages}}</text>
+      </view>
+      <view class="images">
+        <view wx:for="{{images}}" wx:key="*this" class="images__item">
+          <image
+            class="images__img"
+            src="{{item}}"
+            mode="aspectFill"
+            data-index="{{index}}"
+            bindtap="previewImage"
+          />
+          <view class="images__remove" data-index="{{index}}" catchtap="removeImage">×</view>
+        </view>
+        <view wx:if="{{images.length < maxImages}}" class="images__add" bindtap="chooseImage">
+          <text class="images__plus">{{uploading ? '…' : '+'}}</text>
+          <text class="images__addText">{{uploading ? '上传中' : '添加图片'}}</text>
+        </view>
+      </view>
+      <view class="card__tip">聊天截图、商品实物照都可以，最多 3 张</view>
+    </view>
+
+    <view class="notice">
+      平台会保护举报人隐私，不会向被举报人透露你的身份。恶意举报可能影响你的信誉分。
+    </view>
+  </view>
+
+  <view class="footer">
+    <view class="footer__link" bindtap="goMyReports">我的举报</view>
+    <button
+      class="footer__submit"
+      loading="{{submitting}}"
+      disabled="{{submitting || notFound}}"
+      bindtap="handleSubmit"
+    >
+      提交举报
+    </button>
+  </view>
+</view>

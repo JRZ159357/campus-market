@@ -1,0 +1,179 @@
+/* 文件路径: miniprogram/pages/profile/setting.wxss */
+.page {
+  min-height: 100vh;
+  padding: 20rpx 0 60rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  margin: 20rpx 24rpx;
+  padding: 12rpx 28rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.card__title {
+  font-size: 26rpx;
+  color: #999;
+  padding: 22rpx 0 6rpx;
+}
+
+/* 设置行 */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #f4f4f5;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.row__name {
+  font-size: 29rpx;
+  color: #222;
+}
+
+.row__desc {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #a8abb2;
+}
+
+.row__arrow {
+  font-size: 34rpx;
+  color: #ccc;
+  line-height: 1;
+  flex: none;
+}
+
+/* 退出登录 */
+.logout {
+  margin: 40rpx 24rpx 0;
+  height: 92rpx;
+  line-height: 92rpx;
+  text-align: center;
+  background: #fff;
+  border-radius: 46rpx;
+  color: #ff3b30;
+  font-size: 30rpx;
+}
+
+/* 注销账号：红色小字 */
+.delete-link {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 25rpx;
+  color: #f56c6c;
+}
+
+.note {
+  margin: 16rpx 60rpx 0;
+  text-align: center;
+  font-size: 21rpx;
+  color: #bbb;
+  line-height: 1.6;
+}
+
+/* ---------------- 注销弹层 ---------------- */
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+}
+
+.dialog {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 40rpx 32rpx 28rpx;
+  border-radius: 28rpx;
+  background: #fff;
+}
+
+.dialog__title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+.dialog__desc {
+  margin: 18rpx 0 26rpx;
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.7;
+}
+
+.dialog__dot {
+  margin: 0 4rpx;
+  color: #f56c6c;
+}
+
+.field {
+  height: 88rpx;
+  margin-top: 18rpx;
+  padding: 0 24rpx;
+  border-radius: 16rpx;
+  background: #f7f7f8;
+  display: flex;
+  align-items: center;
+}
+
+.field__input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.field__placeholder {
+  color: #bbb;
+}
+
+.field__error {
+  margin-top: 12rpx;
+  font-size: 23rpx;
+  color: #f56c6c;
+}
+
+.dialog__actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 32rpx;
+}
+
+.dialog__btn {
+  flex: 1;
+  height: 84rpx;
+  line-height: 84rpx;
+  text-align: center;
+  border-radius: 42rpx;
+  background: #f5f5f5;
+  color: #666;
+  font-size: 29rpx;
+}
+
+.dialog__btn--danger {
+  background: #ff3b30;
+  color: #fff;
+}
+
+.dialog__btn--disabled {
+  opacity: 0.6;
+}

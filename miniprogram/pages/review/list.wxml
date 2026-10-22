@@ -1,0 +1,110 @@
+<!-- 文件路径: miniprogram/pages/review/list.wxml -->
+<view class="list-page">
+  <!-- 评价概览 -->
+  <view class="summary">
+    <view class="summary__left">
+      <text class="summary__score">{{stat.avgStars || '0.0'}}</text>
+      <view class="summary__stars">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{stat.avgStars >= item ? 'star--on' : ''}}">★</text>
+      </view>
+      <text class="summary__count">{{stat.total}} 条评价</text>
+    </view>
+    <view class="summary__right">
+      <text class="summary__rate">{{stat.goodRate}}%</text>
+      <text class="summary__rate-label">好评率</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="filters">
+    <view
+      wx:for="{{filters}}"
+      wx:key="key"
+      class="filters__item {{active === item.key ? 'filters__item--on' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="switchFilter"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- 评价列表 -->
+  <view wx:if="{{list.length}}" class="reviews">
+    <view wx:for="{{list}}" wx:key="id" class="review" catchlongpress="onReviewLongPress">
+      <view class="review__head">
+        <image wx:if="{{item.avatar}}" class="review__avatar" src="{{item.avatar}}" mode="aspectFill" />
+        <view wx:else class="review__avatar review__avatar--anon">{{item.avatarText}}</view>
+        <view class="review__user">
+          <view class="review__name-row">
+            <text class="review__name">{{item.reviewerNickname}}</text>
+            <text wx:if="{{item.isAnonymous}}" class="review__anon">匿名</text>
+          </view>
+          <view class="review__stars">
+            <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this" class="star star--sm {{item.stars >= star ? 'star--on' : ''}}">★</text>
+            <text class="review__time">{{item.timeText}}</text>
+          </view>
+        </view>
+        <text class="review__level" style="color: {{item.revieweeLevelColor}}">{{item.revieweeLevelLabel}}</text>
+      </view>
+
+      <view wx:if="{{item.content}}" class="review__content">{{item.content}}</view>
+
+      <view wx:if="{{item.images.length}}" class="review__images">
+        <image
+          wx:for="{{item.images}}"
+          wx:for-item="img"
+          wx:for-index="imgIndex"
+          wx:key="*this"
+          class="review__img"
+          src="{{img}}"
+          mode="aspectFill"
+          data-index="{{index}}"
+          data-img-index="{{imgIndex}}"
+          data-field="main"
+          bindtap="previewImages"
+        />
+      </view>
+
+      <!-- 追评块：浅灰背景 + 橙色小字前缀 -->
+      <view wx:if="{{item.followContent || item.followImages.length}}" class="review__follow">
+        <view class="review__follow-head">
+          <text wx:if="{{item.followContent}}" class="review__follow-tag">追评：</text>
+          <text class="review__follow-time">{{item.followTime}}</text>
+        </view>
+        <text wx:if="{{item.followContent}}" class="review__follow-text">{{item.followContent}}</text>
+        <view wx:if="{{item.followImages.length}}" class="review__images">
+          <image
+            wx:for="{{item.followImages}}"
+            wx:for-item="img"
+            wx:for-index="imgIndex"
+            wx:key="*this"
+            class="review__img"
+            src="{{img}}"
+            mode="aspectFill"
+            data-index="{{index}}"
+            data-img-index="{{imgIndex}}"
+            data-field="follow"
+            bindtap="previewImages"
+          />
+        </view>
+      </view>
+
+      <!-- 卖家回复块：浅蓝背景 + 蓝色小字前缀 -->
+      <view wx:if="{{item.replyContent}}" class="review__reply">
+        <text class="review__reply-tag">卖家回复：</text>
+        <text class="review__reply-text">{{item.replyContent}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="list-foot">加载中…</view>
+    <view wx:elif="{{!hasMore}}" class="list-foot">没有更多评价了</view>
+  </view>
+
+  <view wx:elif="{{loaded}}" class="empty">
+    <text class="empty__icon">💬</text>
+    <text class="empty__text">还没有评价，完成交易后来写下第一条吧</text>
+  </view>
+
+  <view wx:else class="loading-wrap">
+    <view class="spinner"></view>
+    <text class="text-muted">加载中…</text>
+  </view>
+</view>

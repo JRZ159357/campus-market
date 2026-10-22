@@ -1,0 +1,153 @@
+<!-- 文件路径: miniprogram/pages/user/home.wxml -->
+<view class="home">
+  <block wx:if="{{home}}">
+    <!-- 顶部用户信息卡 -->
+    <view class="info">
+      <view class="info__top">
+        <image wx:if="{{avatarUrl}}" class="info__avatar" src="{{avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="info__avatar info__avatar--text">{{avatarText}}</view>
+        <view class="info__main">
+          <view class="info__name-row">
+            <text class="info__name">{{home.nickname || '校园用户'}}</text>
+            <text wx:if="{{home.studentVerified}}" class="info__verified">🎓 已认证学生</text>
+            <text wx:else class="info__role">{{home.roleLabel || '普通用户'}}</text>
+          </view>
+          <view wx:if="{{home.intro}}" class="info__intro">{{home.intro}}</view>
+          <view wx:if="{{home.genderLabel && home.genderLabel !== '保密'}}" class="info__gender">{{home.genderLabel}}</view>
+          <view class="info__credit">
+            <text class="info__credit-num" style="color: {{home.creditLevelColor}}">{{home.creditScore}}</text>
+            <text class="info__credit-label">信誉分</text>
+            <text class="info__level" style="background: {{home.creditLevelColor}}">{{home.creditLevelLabel}}</text>
+          </view>
+        </view>
+        <view
+          class="info__follow {{following ? 'info__follow--on' : ''}}"
+          bindtap="handleFollow"
+        >{{following ? '已关注' : '+ 关注'}}</view>
+      </view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="stats">
+      <view class="stats__item">
+        <view class="stats__value">{{home.onSaleCount || 0}}</view>
+        <view class="stats__label">在售</view>
+      </view>
+      <view class="stats__item">
+        <view class="stats__value">{{home.soldCount || 0}}</view>
+        <view class="stats__label">已售</view>
+      </view>
+      <view class="stats__item">
+        <view class="stats__value">{{home.goodRate || 0}}<text class="stats__unit">%</text></view>
+        <view class="stats__label">好评率</view>
+      </view>
+      <view class="stats__item">
+        <view class="stats__value">{{home.fansCount || 0}}</view>
+        <view class="stats__label">粉丝</view>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tabs">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="value"
+        class="tabs__item {{activeTab === item.value ? 'tabs__item--active' : ''}}"
+        data-tab="{{item.value}}"
+        bindtap="onTabChange"
+      >
+        <text>{{item.label}}</text>
+        <view wx:if="{{activeTab === item.value}}" class="tabs__underline"></view>
+      </view>
+    </view>
+
+    <!-- 在售商品：瀑布流双列 -->
+    <block wx:if="{{activeTab === 0}}">
+      <view wx:if="{{!left.length && !right.length && !loadingMore}}" class="empty">
+        <view class="empty__icon">📦</view>
+        <view>TA 还没有在售商品</view>
+      </view>
+      <view wx:else class="waterfall">
+        <view class="waterfall__col">
+          <product-card wx:for="{{left}}" wx:key="id" item="{{item}}" />
+        </view>
+        <view class="waterfall__col">
+          <product-card wx:for="{{right}}" wx:key="id" item="{{item}}" />
+        </view>
+      </view>
+      <view wx:if="{{left.length || right.length}}" class="loadmore">
+        <text wx:if="{{loadingMore}}">加载中…</text>
+        <text wx:elif="{{!hasMore}}">— 没有更多了 —</text>
+        <text wx:else>上拉加载更多</text>
+      </view>
+    </block>
+
+    <!-- 评价列表 -->
+    <block wx:else>
+      <view wx:if="{{!reviews.length && !reviewLoading}}" class="empty">
+        <view class="empty__icon">💬</view>
+        <view>TA 还没有收到评价</view>
+      </view>
+      <view wx:else class="reviews">
+        <view wx:for="{{reviews}}" wx:key="id" class="review">
+          <view class="review__head">
+            <image wx:if="{{item.avatar}}" class="review__avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view wx:else class="review__avatar review__avatar--text">{{item.avatarText}}</view>
+            <view class="review__user" data-id="{{item.reviewerId}}" bindtap="goReviewer">
+              <view class="review__name-row">
+                <text class="review__name">{{item.reviewerNickname || '匿名用户'}}</text>
+                <text wx:if="{{item.isAnonymous}}" class="review__anon">匿名</text>
+              </view>
+              <view class="review__stars">
+                <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this" class="star {{item.stars >= star ? 'star--on' : ''}}">★</text>
+                <text class="review__time">{{item.timeText}}</text>
+              </view>
+            </view>
+          </view>
+          <view wx:if="{{item.content}}" class="review__content">{{item.content}}</view>
+          <view wx:if="{{item.images.length}}" class="review__images">
+            <image
+              wx:for="{{item.images}}"
+              wx:for-item="img"
+              wx:for-index="imgIndex"
+              wx:key="*this"
+              class="review__img"
+              src="{{img}}"
+              mode="aspectFill"
+              data-urls="{{item.images}}"
+              data-url="{{img}}"
+              bindtap="previewImage"
+            />
+          </view>
+          <view wx:if="{{item.replyContent}}" class="review__reply">
+            <text class="review__reply-tag">卖家回复：</text>
+            <text class="review__reply-text">{{item.replyContent}}</text>
+          </view>
+        </view>
+        <view class="loadmore">
+          <text wx:if="{{reviewLoading}}">加载中…</text>
+          <text wx:elif="{{!reviewHasMore}}">— 没有更多了 —</text>
+          <text wx:else>上拉加载更多</text>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <!-- 底部固定栏 -->
+  <view wx:if="{{home}}" class="action-bar">
+    <view class="action-bar__more" bindtap="showMoreActions">⋯</view>
+    <view class="action-bar__btn action-bar__btn--ghost" bindtap="handleFollow">
+      {{following ? '已关注' : '+ 关注'}}
+    </view>
+    <view class="action-bar__btn action-bar__btn--primary" bindtap="handleChat">
+      {{chatLoading ? '连接中…' : '私信'}}
+    </view>
+  </view>
+  <view wx:if="{{home}}" class="bottom-space"></view>
+</view>

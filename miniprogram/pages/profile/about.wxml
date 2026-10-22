@@ -1,0 +1,42 @@
+<!-- 文件路径: miniprogram/pages/profile/about.wxml -->
+<view class="page">
+  <view class="logo">
+    <view class="logo__icon">🎓</view>
+    <view class="logo__name">校园二手</view>
+    <view class="logo__desc">校园闲置流转平台</view>
+    <view class="logo__version">版本 {{version}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card__title">平台简介</view>
+    <view class="intro">
+      校园二手是一个面向在校学生的闲置物品交易平台。平台以「学生认证 + 信誉分」为核心，
+      只允许通过实名学生认证的用户发布商品，用评价累积的信誉分衡量每位用户的交易可信度，
+      让闲置物品在校园内安全、放心地流转。
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card__title">特色功能</view>
+    <view wx:for="{{features}}" wx:key="title" class="feature">
+      <view class="feature__icon">{{item.icon}}</view>
+      <view class="feature__body">
+        <view class="feature__title">{{item.title}}</view>
+        <view class="feature__desc">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card__title">使用条款</view>
+    <view class="terms">
+      <view class="terms__item">1. 发布商品须完成学生认证，并保证所填信息真实有效。</view>
+      <view class="terms__item">2. 交易双方应按约定时间与方式完成交付，恶意违约将扣减信誉分。</view>
+      <view class="terms__item">3. 评价须基于真实交易，虚假评价将按违规处理。</view>
+      <view class="terms__item">4. 禁止发布违禁品、仿冒品及侵犯他人权益的内容。</view>
+    </view>
+  </view>
+
+  <view class="contact" bindtap="contactService">联系客服</view>
+  <view class="copyright">© 2024 校园二手 · 毕业设计项目</view>
+</view>

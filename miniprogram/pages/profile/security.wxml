@@ -1,0 +1,246 @@
+<!-- 文件路径: miniprogram/pages/profile/security.wxml -->
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <text>加载中</text>
+  </view>
+
+  <block wx:else>
+    <!-- 登录方式 -->
+    <view class="card">
+      <view class="card__title">登录方式</view>
+
+      <view class="way">
+        <view class="way__left">
+          <view class="way__icon way__icon--wx"></view>
+          <view class="way__text">
+            <view class="way__name">微信登录</view>
+            <view class="way__desc">{{isWechatUser ? '已通过微信登录本账号' : '未绑定微信'}}</view>
+          </view>
+        </view>
+        <text class="way__state {{isWechatUser ? 'way__state--on' : ''}}">
+          {{isWechatUser ? '已启用' : '未启用'}}
+        </text>
+      </view>
+
+      <view class="way">
+        <view class="way__left">
+          <view class="way__icon way__icon--account"></view>
+          <view class="way__text">
+            <view class="way__name">账号密码登录</view>
+            <view class="way__desc">
+              {{hasAccount ? '当前账号：' + userInfo.username : '尚未设置，设置后可用账号密码登录'}}
+            </view>
+          </view>
+        </view>
+        <text class="way__state {{hasAccount ? 'way__state--on' : ''}}">
+          {{hasAccount ? '已启用' : '未启用'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 账号安全操作 -->
+    <view class="card">
+      <view class="card__title">账号安全</view>
+
+      <view class="action action--phone">
+        <view class="action__left">
+          <view class="action__name">手机号</view>
+          <view class="action__desc">
+            {{phoneMask ? '已绑定 ' + phoneMask : '用于交易联系与找回账号'}}
+          </view>
+        </view>
+        <button
+          wx:if="{{!phoneMask}}"
+          class="mini-btn"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="handleGetPhone"
+          loading="{{bindingPhone}}"
+        >去绑定</button>
+        <button
+          wx:else
+          class="mini-btn mini-btn--ghost"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="handleChangePhone"
+          loading="{{bindingPhone}}"
+        >修改</button>
+      </view>
+
+      <view wx:if="{{!hasAccount}}" class="action" bindtap="openBind">
+        <view class="action__left">
+          <view class="action__name">设置账号密码</view>
+          <view class="action__desc">当前为微信用户，设置后可使用账号密码在任意设备登录</view>
+        </view>
+        <text class="action__arrow">{{mode === 'bind' ? '收起' : '去设置'}}</text>
+      </view>
+
+      <view wx:else class="action" bindtap="openChange">
+        <view class="action__left">
+          <view class="action__name">修改密码</view>
+          <view class="action__desc">定期更换密码可提升账号安全性</view>
+        </view>
+        <text class="action__arrow">{{mode === 'change' ? '收起' : '去修改'}}</text>
+      </view>
+
+      <!-- 绑定账号表单 -->
+      <view wx:if="{{mode === 'bind'}}" class="form">
+        <view class="field {{errors.username ? 'field--error' : ''}} {{focused === 'username' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{username}}"
+            placeholder="账号（4-20位字母或数字）"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="username"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+        </view>
+        <view wx:if="{{errors.username}}" class="field__error">{{errors.username}}</view>
+
+        <view class="field {{errors.password ? 'field--error' : ''}} {{focused === 'password' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{password}}"
+            password="{{!showPassword}}"
+            placeholder="密码（6-20位）"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="password"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+          <view class="eye" bindtap="togglePassword">
+            <view class="eye__outer"></view>
+            <view class="eye__pupil"></view>
+            <view wx:if="{{!showPassword}}" class="eye__slash"></view>
+          </view>
+        </view>
+        <view wx:if="{{errors.password}}" class="field__error">{{errors.password}}</view>
+
+        <view class="field {{errors.confirmPassword ? 'field--error' : ''}} {{focused === 'confirmPassword' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{confirmPassword}}"
+            password="{{!showPassword}}"
+            placeholder="确认密码"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="confirmPassword"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+        </view>
+        <view wx:if="{{errors.confirmPassword}}" class="field__error">{{errors.confirmPassword}}</view>
+
+        <button
+          class="btn-gradient"
+          loading="{{submitting}}"
+          disabled="{{submitting}}"
+          bindtap="handleBind"
+        >
+          {{submitting ? '提交中...' : '确认绑定'}}
+        </button>
+        <view class="cancel" bindtap="closeForm">取消</view>
+      </view>
+
+      <!-- 修改密码表单 -->
+      <view wx:if="{{mode === 'change'}}" class="form">
+        <view class="field {{errors.oldPassword ? 'field--error' : ''}} {{focused === 'oldPassword' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{oldPassword}}"
+            password="{{!showPassword}}"
+            placeholder="原密码"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="oldPassword"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+        </view>
+        <view wx:if="{{errors.oldPassword}}" class="field__error">{{errors.oldPassword}}</view>
+
+        <view class="field {{errors.newPassword ? 'field--error' : ''}} {{focused === 'newPassword' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{newPassword}}"
+            password="{{!showPassword}}"
+            placeholder="新密码（6-20位）"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="newPassword"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+          <view class="eye" bindtap="togglePassword">
+            <view class="eye__outer"></view>
+            <view class="eye__pupil"></view>
+            <view wx:if="{{!showPassword}}" class="eye__slash"></view>
+          </view>
+        </view>
+        <view wx:if="{{errors.newPassword}}" class="field__error">{{errors.newPassword}}</view>
+
+        <view class="field {{errors.confirmNew ? 'field--error' : ''}} {{focused === 'confirmNew' ? 'field--focus' : ''}}">
+          <input
+            class="field__input"
+            value="{{confirmNew}}"
+            password="{{!showPassword}}"
+            placeholder="确认新密码"
+            placeholder-class="field__placeholder"
+            maxlength="20"
+            data-field="confirmNew"
+            bindfocus="onFocus"
+            bindblur="onBlur"
+            bindinput="onInput"
+          />
+        </view>
+        <view wx:if="{{errors.confirmNew}}" class="field__error">{{errors.confirmNew}}</view>
+
+        <button
+          class="btn-gradient"
+          loading="{{submitting}}"
+          disabled="{{submitting}}"
+          bindtap="handleChange"
+        >
+          {{submitting ? '提交中...' : '确认修改'}}
+        </button>
+        <view class="cancel" bindtap="closeForm">取消</view>
+      </view>
+    </view>
+
+    <!-- 学生认证状态 -->
+    <view class="card">
+      <view class="card__title">学生认证</view>
+
+      <view class="action action--auth" bindtap="goStudentAuth">
+        <view class="action__left">
+          <view class="action__name">认证状态</view>
+          <view class="action__desc">
+            <block wx:if="{{authStatus === 'verified'}}">
+              已通过认证，学号 {{studentNo}}
+            </block>
+            <block wx:elif="{{authStatus === 'pending'}}">
+              认证申请审核中，请耐心等待
+            </block>
+            <block wx:else>
+              未认证，完成认证后即可发布商品
+            </block>
+          </view>
+        </view>
+        <text class="auth__state {{authStatusClass}}">{{authStatusLabel}}</text>
+      </view>
+
+      <view wx:if="{{authRejectReason}}" class="auth__reject">驳回原因：{{authRejectReason}}</view>
+    </view>
+
+    <view class="tips">
+      提示：微信用户绑定账号密码后，两种方式都可以登录同一账号，交易记录与认证状态不受影响。
+    </view>
+  </block>
+</view>

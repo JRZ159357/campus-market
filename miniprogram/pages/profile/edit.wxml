@@ -1,0 +1,67 @@
+<!-- 文件路径: miniprogram/pages/profile/edit.wxml -->
+<view class="page">
+  <!-- 头像 -->
+  <view class="card avatar-card">
+    <text class="card__label">头像</text>
+    <view class="avatar-picker" bindtap="chooseAvatar">
+      <image wx:if="{{avatarUrl}}" class="avatar-picker__img" src="{{avatarUrl}}" mode="aspectFill" />
+      <view wx:else class="avatar-picker__img avatar-picker__img--text">{{avatarText}}</view>
+      <view class="avatar-picker__edit">更换</view>
+    </view>
+  </view>
+
+  <!-- 昵称 -->
+  <view class="card">
+    <view class="field">
+      <view class="field__label">昵称</view>
+      <view class="field__body">
+        <input
+          class="field__input"
+          value="{{nickname}}"
+          maxlength="20"
+          placeholder="给自己起个名字"
+          placeholder-class="field__ph"
+          bindinput="onNicknameInput"
+        />
+        <text class="field__count {{nicknameCount > 20 ? 'field__count--over' : ''}}">{{nicknameCount}}/20</text>
+      </view>
+      <view wx:if="{{errors.nickname}}" class="field__error">{{errors.nickname}}</view>
+    </view>
+
+    <!-- 性别 -->
+    <view class="field">
+      <view class="field__label">性别</view>
+      <view class="field__body">
+        <radio-group class="gender-group" bindchange="onGenderChange">
+          <label wx:for="{{genderOptions}}" wx:key="value" class="gender">
+            <radio value="{{item.value}}" checked="{{item.value === gender}}" color="#FF6B35" />
+            <text class="gender__text">{{item.label}}</text>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="field">
+      <view class="field__label">个人简介</view>
+      <view class="field__body field__body--column">
+        <textarea
+          class="field__textarea"
+          value="{{intro}}"
+          maxlength="100"
+          placeholder="介绍一下自己，比如「大三在读，主打一个诚信交易」"
+          placeholder-class="field__ph"
+          bindinput="onIntroInput"
+        />
+        <text class="field__count {{introCount > 100 ? 'field__count--over' : ''}}">{{introCount}}/100</text>
+      </view>
+      <view wx:if="{{errors.intro}}" class="field__error">{{errors.intro}}</view>
+    </view>
+  </view>
+
+  <view class="tips">简介会显示在你的卖家主页上，让别人更了解你的交易风格</view>
+
+  <button class="save-btn" loading="{{saving}}" disabled="{{saving || loading}}" bindtap="save">
+    保存
+  </button>
+</view>

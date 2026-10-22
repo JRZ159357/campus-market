@@ -1,0 +1,104 @@
+<!-- 文件路径: miniprogram/pages/profile/index.wxml -->
+<view class="page">
+  <!-- 顶部用户信息卡：橙色渐变 -->
+  <view wx:if="{{logged && profile}}" class="hero">
+    <view class="hero__top">
+      <view class="hero__avatar-wrap" bindtap="goEdit">
+        <image wx:if="{{profile.avatar}}" class="hero__avatar" src="{{avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="hero__avatar hero__avatar--text">{{avatarText}}</view>
+        <view class="hero__avatar-edit">✎</view>
+      </view>
+      <view class="hero__info" bindtap="goEdit">
+        <view class="hero__name-row">
+          <text class="hero__name">{{profile.nickname || '微信用户'}}</text>
+          <text class="hero__role">{{profile.roleLabel || '普通用户'}}</text>
+        </view>
+        <view wx:if="{{profile.intro}}" class="hero__intro">{{profile.intro}}</view>
+        <view class="hero__credit-row">
+          <text class="hero__credit-num" style="color: {{profile.creditLevelColor}}">{{profile.creditScore}}</text>
+          <text class="hero__credit-unit">分</text>
+          <text class="hero__level" style="background: {{profile.creditLevelColor}}">{{profile.creditLevelLabel}}</text>
+        </view>
+      </view>
+      <view class="hero__edit" bindtap="goEdit">编辑资料</view>
+    </view>
+
+    <!-- 数据统计行 -->
+    <view class="hero__stats">
+      <view class="hero__stat" data-type="follow" bindtap="goStat">
+        <view class="hero__value">{{profile.followCount || 0}}</view>
+        <view class="hero__label">关注</view>
+      </view>
+      <view class="hero__stat" data-type="fans" bindtap="goStat">
+        <view class="hero__value">{{profile.fansCount || 0}}</view>
+        <view class="hero__label">粉丝</view>
+      </view>
+      <view class="hero__stat" data-type="favorite" bindtap="goStat">
+        <view class="hero__value">{{profile.favoriteCount || 0}}</view>
+        <view class="hero__label">收藏</view>
+      </view>
+      <view class="hero__stat" data-type="publish" bindtap="goStat">
+        <view class="hero__value">{{profile.publishCount || 0}}</view>
+        <view class="hero__label">发布</view>
+      </view>
+      <view class="hero__stat" data-type="sold" bindtap="goStat">
+        <view class="hero__value">{{profile.soldCount || 0}}</view>
+        <view class="hero__label">已售</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未登录：引导登录 -->
+  <view wx:elif="{{!loading}}" class="hero hero--guest" bindtap="goLogin">
+    <view class="hero__guest-avatar">🙂</view>
+    <view class="hero__guest-title">登录后开启校园交易</view>
+    <view class="hero__guest-desc">微信一键登录 · 认证学生可发布商品</view>
+    <view class="hero__guest-btn">立即登录</view>
+  </view>
+
+  <!-- 我的订单 -->
+  <view class="card order-card">
+    <view class="order-card__head">
+      <text class="card__title">我的订单</text>
+      <view class="order-card__more" data-status="" bindtap="goOrderList">
+        <text>全部订单</text>
+        <text class="order-card__arrow">›</text>
+      </view>
+    </view>
+    <view class="order-card__grid">
+      <view
+        wx:for="{{orderEntries}}"
+        wx:key="status"
+        class="order-card__item"
+        data-status="{{item.nav || item.status}}"
+        bindtap="goOrderList"
+      >
+        <view class="order-card__icon">
+          <text class="order-card__emoji">{{item.icon}}</text>
+          <text wx:if="{{item.badge > 0}}" class="order-card__badge">{{item.badge > 99 ? '99+' : item.badge}}</text>
+        </view>
+        <text class="order-card__label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能宫格：3 列 -->
+  <view class="card">
+    <view class="card__title">全部功能</view>
+    <view class="grid">
+      <view
+        wx:for="{{menuItems}}"
+        wx:key="key"
+        class="grid__item {{item.disabled ? 'grid__item--disabled' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onMenuTap"
+      >
+        <view class="grid__icon" style="background: {{item.bg}}">{{item.icon}}</view>
+        <text class="grid__label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{logged}}" class="logout" bindtap="handleLogout">退出登录</view>
+  <view class="note">交易完成后 7 天内可评价与追评，评价会计入对方信誉分</view>
+</view>

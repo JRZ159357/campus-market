@@ -1,0 +1,75 @@
+<!-- 文件路径: miniprogram/pages/review/follow.wxml -->
+<view class="follow-page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <text class="text-muted">加载评价中…</text>
+  </view>
+
+  <view wx:elif="{{error}}" class="empty">
+    <text class="empty__icon">🕒</text>
+    <text class="empty__text">{{error}}</text>
+    <view class="btn-ghost empty__btn" bindtap="goBack">返回</view>
+  </view>
+
+  <block wx:else>
+    <!-- 原评价 -->
+    <view class="origin">
+      <view class="origin__head">
+        <text class="origin__title">我的原评价</text>
+        <text class="origin__time">{{review.createTime}}</text>
+      </view>
+      <view class="origin__stars">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{review.stars >= item ? 'star--on' : ''}}">★</text>
+        <text class="origin__stars-text">{{review.starsText}}</text>
+      </view>
+      <view class="origin__content">{{review.content}}</view>
+      <view wx:if="{{review.images.length}}" class="origin__images">
+        <image
+          wx:for="{{review.images}}"
+          wx:key="*this"
+          class="origin__img"
+          src="{{item}}"
+          mode="aspectFill"
+          data-index="{{index}}"
+          bindtap="previewImage"
+        />
+      </view>
+      <view class="origin__product">商品：{{review.productTitle}}</view>
+    </view>
+
+    <view class="tip">追评会显示在原评价下方，无法修改，也不会重新计算信誉分。</view>
+
+    <!-- 追评内容 -->
+    <view class="card">
+      <view class="card__title">追评内容</view>
+      <textarea
+        class="editor"
+        value="{{content}}"
+        placeholder="补充使用感受、卖家后续服务，或对之前评价的说明"
+        maxlength="{{maxLength}}"
+        bindinput="onContent"
+        auto-height
+      />
+      <view class="editor__count">{{charCount}}/{{maxLength}}</view>
+
+      <view class="images">
+        <view wx:for="{{images}}" wx:key="*this" class="images__item">
+          <image class="images__img" src="{{item}}" mode="aspectFill" data-index="{{index}}" bindtap="previewImage" />
+          <view class="images__del" data-index="{{index}}" catchtap="removeImage">×</view>
+        </view>
+        <view wx:if="{{images.length < maxImages}}" class="images__add" bindtap="chooseImage">
+          <text class="images__plus">+</text>
+          <text class="images__hint">{{uploading ? '上传中' : '添加图片'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-space"></view>
+    <view class="action-bar">
+      <view
+        class="action-bar__btn action-bar__btn--primary {{submitting ? 'action-bar__btn--disabled' : ''}}"
+        bindtap="handleSubmit"
+      >{{submitting ? '提交中…' : '提交追评'}}</view>
+    </view>
+  </block>
+</view>

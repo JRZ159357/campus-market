@@ -1,0 +1,272 @@
+/* 文件路径: miniprogram/pages/profile/security.wxss */
+/* 复用登录页的输入框 / 图标 / 按钮样式 */
+@import '../login/index.wxss';
+
+.page {
+  min-height: 100vh;
+  padding: 8rpx 0 48rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  margin: 20rpx 32rpx;
+  padding: 30rpx 28rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.card__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8rpx;
+}
+
+/* 登录方式行 */
+.way {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26rpx 0;
+  border-bottom: 1rpx solid #f4f4f5;
+}
+
+.way:last-child {
+  border-bottom: none;
+  padding-bottom: 8rpx;
+}
+
+.way__left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.way__icon {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 20rpx;
+  flex: none;
+  position: relative;
+}
+
+.way__icon--wx {
+  background: linear-gradient(135deg, #07c160, #10b981);
+}
+
+.way__icon--wx::before,
+.way__icon--wx::after {
+  content: '';
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.way__icon--wx::before {
+  width: 22rpx;
+  height: 22rpx;
+  left: 14rpx;
+  top: 20rpx;
+}
+
+.way__icon--wx::after {
+  width: 14rpx;
+  height: 14rpx;
+  right: 14rpx;
+  top: 34rpx;
+  opacity: 0.85;
+}
+
+.way__icon--account {
+  background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+}
+
+.way__icon--account::before {
+  content: '';
+  position: absolute;
+  left: 16rpx;
+  top: 20rpx;
+  width: 36rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: #fff;
+}
+
+.way__icon--account::after {
+  content: '';
+  position: absolute;
+  left: 16rpx;
+  top: 38rpx;
+  width: 22rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.way__text {
+  min-width: 0;
+}
+
+.way__name {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.way__desc {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #999;
+  word-break: break-all;
+}
+
+.way__state {
+  font-size: 22rpx;
+  color: #bbb;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  background: #f5f5f5;
+  flex: none;
+}
+
+.way__state--on {
+  color: #67c23a;
+  background: #f0f9eb;
+}
+
+/* 操作行 */
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 22rpx;
+  padding: 24rpx 22rpx;
+  border-radius: 18rpx;
+  background: #fff8f4;
+  border: 1rpx solid #ffe6dc;
+}
+
+.action__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.action__name {
+  font-size: 28rpx;
+  color: #222;
+  font-weight: 500;
+}
+
+.action__desc {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #a8abb2;
+  line-height: 1.5;
+}
+
+.action__arrow {
+  font-size: 24rpx;
+  color: #ff6b35;
+  flex: none;
+}
+
+/* 手机号行：弱化底色，与账号操作区分 */
+.action--phone {
+  background: #f8f9fb;
+  border-color: #eef0f3;
+}
+
+.mini-btn {
+  flex: none;
+  height: 56rpx;
+  line-height: 56rpx;
+  padding: 0 26rpx;
+  margin: 0;
+  border-radius: 28rpx;
+  font-size: 24rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+  border: none;
+}
+
+.mini-btn::after {
+  border: none;
+}
+
+/* 改绑手机号：描边按钮，与「去绑定」的主按钮区分 */
+.mini-btn--ghost {
+  background: #fff;
+  color: #ff6b35;
+  border: 1rpx solid #ff6b35;
+}
+
+/* 学生认证行 */
+.action--auth {
+  background: #f8f9fb;
+  border-color: #eef0f3;
+}
+
+.auth__state {
+  flex: none;
+  padding: 4rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  line-height: 30rpx;
+}
+
+.auth__state--pass {
+  color: #67c23a;
+  background: #f0f9eb;
+}
+
+.auth__state--wait {
+  color: #e6a23c;
+  background: #fff7e6;
+}
+
+.auth__state--none {
+  color: #909399;
+  background: #f4f4f5;
+}
+
+.auth__reject {
+  margin-top: 16rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 12rpx;
+  background: #fef0f0;
+  color: #f56c6c;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+/* 表单 */
+.form {
+  margin-top: 26rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx dashed #f0f0f0;
+}
+
+.form .field {
+  margin-top: 20rpx;
+}
+
+.form .btn-gradient {
+  margin-top: 32rpx;
+}
+
+.cancel {
+  margin-top: 18rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #909399;
+}
+
+.tips {
+  margin: 8rpx 40rpx 0;
+  font-size: 22rpx;
+  color: #a8abb2;
+  line-height: 1.7;
+}

@@ -1,0 +1,145 @@
+<!-- 文件路径: miniprogram/pages/report/my.wxml -->
+<view class="page">
+  <view class="page__body">
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && list.length === 0}}" class="empty">
+      <view class="empty__icon">📋</view>
+      <view class="empty__text">还没有提交过举报</view>
+      <view class="empty__hint">遇到虚假描述、欺诈或不文明行为时，可在这里举报，平台会核实处理</view>
+    </view>
+
+    <view wx:elif="{{loading}}" class="loading">
+      <view class="loading__dot"></view>
+      <view class="loading__text">加载中…</view>
+    </view>
+
+    <view wx:else class="list">
+      <view
+        wx:for="{{list}}"
+        wx:key="id"
+        class="item"
+        data-id="{{item.id}}"
+        bindtap="openDetail"
+      >
+        <view class="item__head">
+          <text class="item__type" style="color:{{item.color}}">{{item.typeLabel}}</text>
+          <text class="item__status" style="color:{{item.statusColor}};background:{{item.statusBg}}">
+            {{item.statusLabel}}
+          </text>
+        </view>
+
+        <view class="item__target">
+          <image wx:if="{{item.targetCover}}" class="item__cover" src="{{item.targetCover}}" mode="aspectFill" />
+          <view wx:else class="item__cover item__cover--text">{{item.reasonText}}</view>
+          <view class="item__targetBody">
+            <view class="item__title">{{item.targetTitle}}</view>
+            <view class="item__meta">{{item.reasonText}} · {{item.timeText}}</view>
+          </view>
+        </view>
+
+        <view class="item__content">{{item.content}}</view>
+
+        <!-- 处理结果：绿色（成立）/ 灰色（驳回），与状态色一致 -->
+        <view wx:if="{{item.finished}}" class="item__result item__result--{{item.status}}">
+          <view class="item__resultTitle">{{item.status === 2 ? '处理结果' : '未予受理'}}</view>
+          <view class="item__resultText">{{item.resultText}}</view>
+        </view>
+        <view wx:else class="item__pending">
+          {{item.status === 0 ? '等待客服接单' : '客服正在核实，请耐心等待'}}
+        </view>
+      </view>
+
+      <view wx:if="{{loadingMore}}" class="list__footer">加载中…</view>
+      <view wx:elif="{{!hasMore && list.length > 0}}" class="list__footer">没有更多了</view>
+    </view>
+  </view>
+
+  <!-- 处理详情弹层 -->
+  <view wx:if="{{detailVisible}}" class="mask" bindtap="closeDetail">
+    <view class="sheet" catchtap="stopPropagation">
+      <view class="sheet__bar"></view>
+      <view class="sheet__head">
+        <text class="sheet__title">举报详情</text>
+        <text class="sheet__close" bindtap="closeDetail">×</text>
+      </view>
+
+      <scroll-view scroll-y class="sheet__body">
+        <view class="sheet__status" style="color:{{detail.statusColor}};background:{{detail.statusBg}}">
+          {{detail.statusLabel}}
+        </view>
+
+        <view class="sheet__target">
+          <image wx:if="{{detail.targetCover}}" class="sheet__cover" src="{{detail.targetCover}}" mode="aspectFill" />
+          <view wx:else class="sheet__cover sheet__cover--text">{{detail.typeLabel}}</view>
+          <view class="sheet__targetBody">
+            <view class="sheet__targetTitle">{{detail.targetTitle}}</view>
+            <view class="sheet__targetMeta">{{detail.typeLabel}} · {{detail.reasonText}}</view>
+          </view>
+        </view>
+
+        <view class="sheet__section">
+          <view class="sheet__label">详细描述</view>
+          <view class="sheet__content">{{detail.content}}</view>
+        </view>
+
+        <view wx:if="{{detail.images.length > 0}}" class="sheet__section">
+          <view class="sheet__label">证据图片</view>
+          <view class="sheet__images">
+            <image
+              wx:for="{{detail.images}}"
+              wx:key="*this"
+              class="sheet__img"
+              src="{{item}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              bindtap="previewImage"
+            />
+          </view>
+        </view>
+
+        <view class="sheet__section">
+          <view class="sheet__label">处理进度</view>
+          <view class="timeline">
+            <view class="timeline__row">
+              <view class="timeline__dot timeline__dot--primary"></view>
+              <view class="timeline__body">
+                <view class="timeline__title">提交举报</view>
+                <view class="timeline__time">{{detail.createTime}}</view>
+              </view>
+            </view>
+            <view wx:if="{{detail.acceptTime}}" class="timeline__row">
+              <view class="timeline__dot timeline__dot--warning"></view>
+              <view class="timeline__body">
+                <view class="timeline__title">客服接单</view>
+                <view class="timeline__time">{{detail.acceptTime}}</view>
+              </view>
+            </view>
+            <view wx:if="{{detail.handleTime}}" class="timeline__row">
+              <view class="timeline__dot {{detail.status === 2 ? 'timeline__dot--danger' : 'timeline__dot--muted'}}"></view>
+              <view class="timeline__body">
+                <view class="timeline__title">
+                  {{detail.status === 2 ? '处理完成' : '核实后未发现违规'}}
+                </view>
+                <view class="timeline__time">{{detail.handleTime}}</view>
+              </view>
+            </view>
+            <view wx:else class="timeline__row">
+              <view class="timeline__dot timeline__dot--muted timeline__dot--hollow"></view>
+              <view class="timeline__body">
+                <view class="timeline__title timeline__title--muted">等待处理结果</view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{detail.finished}}" class="sheet__result" style="background:{{detail.statusBg}}">
+          <view class="sheet__resultLabel" style="color:{{detail.statusColor}}">
+            {{detail.status === 2 ? '处理结果' : '未予受理的原因'}}
+          </view>
+          <view class="sheet__resultText">{{detail.resultText}}</view>
+          <view wx:if="{{detail.actionText}}" class="sheet__action">执行动作：{{detail.actionText}}</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

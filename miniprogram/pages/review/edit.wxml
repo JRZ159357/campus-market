@@ -1,0 +1,100 @@
+<!-- 文件路径: miniprogram/pages/review/edit.wxml -->
+<view class="review-page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <text class="text-muted">加载订单中…</text>
+  </view>
+
+  <view wx:elif="{{error}}" class="empty">
+    <text class="empty__icon">😕</text>
+    <text class="empty__text">{{error}}</text>
+    <view class="btn-ghost empty__btn" bindtap="goBack">返回订单</view>
+  </view>
+
+  <block wx:else>
+    <!-- 商品信息 -->
+    <view class="goods">
+      <image wx:if="{{product.cover}}" class="goods__cover" src="{{product.cover}}" mode="aspectFill" />
+      <view wx:else class="goods__cover goods__cover--empty">无图</view>
+      <view class="goods__body">
+        <text class="goods__title">{{product.title}}</text>
+        <view class="goods__meta">
+          <text class="goods__price">¥{{product.price}}</text>
+          <text class="goods__type">{{reviewTypeLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip">你的评价会立即计入对方信誉分，提交后不可修改，可在交易完成 7 天内追评一次。</view>
+
+    <!-- 星级评分：每个维度独立打星 -->
+    <view class="card">
+      <view class="card__title">评分</view>
+      <view wx:for="{{dimensions}}" wx:key="key" class="dim">
+        <view class="dim__head">
+          <text class="dim__label">{{item.label}}</text>
+          <text class="dim__tip">{{item.tip}}</text>
+        </view>
+        <view class="dim__stars">
+          <view
+            wx:for="{{[1,2,3,4,5]}}"
+            wx:for-item="star"
+            wx:key="*this"
+            class="star {{ratings[item.key] >= star ? 'star--on' : ''}}"
+            data-key="{{item.key}}"
+            data-value="{{star}}"
+            bindtap="onStar"
+            hover-class="star--hover"
+          >★</view>
+          <text class="dim__text">{{labels[item.key]}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 文字评价 -->
+    <view class="card">
+      <view class="card__title">文字评价<text class="card__optional">（选填）</text></view>
+      <textarea
+        class="editor"
+        value="{{content}}"
+        placeholder="说说这次交易的感受，你的经验会帮到其他同学"
+        maxlength="{{maxLength}}"
+        bindinput="onContent"
+        auto-height
+      />
+      <view class="editor__count">{{charCount}}/{{maxLength}}</view>
+    </view>
+
+    <!-- 图片 -->
+    <view class="card">
+      <view class="card__title">上传图片<text class="card__optional">（选填，最多 {{maxImages}} 张）</text></view>
+      <view class="images">
+        <view wx:for="{{images}}" wx:key="*this" class="images__item">
+          <image class="images__img" src="{{item}}" mode="aspectFill" data-index="{{index}}" bindtap="previewImage" />
+          <view class="images__del" data-index="{{index}}" catchtap="removeImage">×</view>
+        </view>
+        <view wx:if="{{images.length < maxImages}}" class="images__add" bindtap="chooseImage">
+          <text class="images__plus">+</text>
+          <text class="images__hint">{{uploading ? '上传中' : '添加图片'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 匿名开关 -->
+    <view class="card anon">
+      <view class="anon__text">
+        <text class="anon__title">匿名评价</text>
+        <text class="anon__desc">开启后其他同学只能看到「匿名用户」，但平台仍可追溯</text>
+      </view>
+      <switch checked="{{isAnonymous}}" color="#FF6B35" bindchange="toggleAnonymous" />
+    </view>
+
+    <view class="bottom-space"></view>
+    <view class="action-bar">
+      <view
+        class="action-bar__btn action-bar__btn--primary {{submitting ? 'action-bar__btn--disabled' : ''}}"
+        bindtap="handleSubmit"
+      >{{submitting ? '提交中…' : '提交评价'}}</view>
+    </view>
+  </block>
+</view>

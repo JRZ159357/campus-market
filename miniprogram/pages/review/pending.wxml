@@ -1,0 +1,40 @@
+<!-- 文件路径: miniprogram/pages/review/pending.wxml -->
+<view class="pending-page">
+  <view wx:if="{{list.length}}" class="pending-list">
+    <view class="pending-tip">共 {{total}} 笔交易待你评价，评价后对方信誉分会立即更新</view>
+
+    <view wx:for="{{list}}" wx:key="orderId" class="item">
+      <view class="item__top" data-no="{{item.orderNo}}" bindtap="goOrder">
+        <text class="item__no">订单 {{item.orderNo}}</text>
+        <text class="item__time">{{item.timeText}}</text>
+      </view>
+      <view class="item__body">
+        <image wx:if="{{item.cover}}" class="item__cover" src="{{item.cover}}" mode="aspectFill" />
+        <view wx:else class="item__cover item__cover--empty">无图</view>
+        <view class="item__info">
+          <text class="item__title">{{item.productTitle || '商品'}}</text>
+          <text class="item__price">¥{{item.price}}</text>
+          <text class="item__peer">评价{{item.peerLabel}}：{{item.peerNickname || '对方'}}</text>
+        </view>
+      </view>
+      <view class="item__foot">
+        <view class="btn-ghost item__btn" data-no="{{item.orderNo}}" bindtap="goOrder">查看订单</view>
+        <view class="item__btn item__btn--primary" data-id="{{item.orderId}}" bindtap="goReview">去评价</view>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="list-foot">加载中…</view>
+    <view wx:elif="{{!hasMore}}" class="list-foot">没有更多了</view>
+  </view>
+
+  <view wx:elif="{{loaded}}" class="empty">
+    <text class="empty__icon">✨</text>
+    <text class="empty__text">没有待评价的交易</text>
+    <view class="btn-ghost empty__btn" bindtap="goHome">去逛逛</view>
+  </view>
+
+  <view wx:else class="loading-wrap">
+    <view class="spinner"></view>
+    <text class="text-muted">加载中…</text>
+  </view>
+</view>
