@@ -1,0 +1,28 @@
+# Windows 批处理：强制 LF -> CRLF，避免在非 Windows 环境 clone 后
+# 行尾变成 LF 导致 goto/call 标签解析失败。内容本身按 GBK 保存，
+# eol 转换只处理 0x0D0A，不会破坏 GBK 字节。
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# 其余文本统一 LF
+*.java   text eol=lf
+*.js     text eol=lf
+*.vue    text eol=lf
+*.wxml   text eol=lf
+*.wxss   text eol=lf
+*.json   text eol=lf
+*.sql    text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.py     text eol=lf
+*.sh     text eol=lf
+
+# 二进制资源，不做任何行尾 / 文本处理
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.jar    binary
+*.woff   binary
+*.woff2  binary

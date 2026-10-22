@@ -10,6 +10,7 @@
 ```
 campus-market/
 ├── docs/
+│   ├── DEPLOYMENT.md             部署文档（环境要求 / 部署步骤 / 端口 / 演示账号 / 故障排查 / 生产建议）
 │   ├── project-profile.md        项目档案（唯一事实来源：角色、模块、约定）
 │   ├── api-module1.md            模块1 接口说明
 │   ├── api-module2.md            模块2 接口说明（分类 / 商品发布 / 审核）
@@ -85,6 +86,8 @@ campus-market/
 │                                 favorite（我的收藏）/ follow（关注与粉丝）/ user/home（卖家主页）/
 │                                 order/{confirm,detail,list} / address/{list,edit} /
 │                                 review/{edit,follow,list,pending} / report/{index 举报,my 我的举报}
+├── start.bat                    一键启动脚本（Windows：检查 JDK → 起后端 → 起管理端 → 探活）
+├── stop.bat                     一键停止脚本（Windows：按端口精确结束 8080 / 5173）
 └── tests/
     ├── smoke_test.py             模块1 端到端冒烟测试（22 个用例）
     ├── smoke_module2.py          模块2 端到端冒烟测试（81 个用例）
@@ -132,6 +135,9 @@ campus-market/
 ---
 
 ## 3. 启动步骤
+
+> **赶时间就双击 `start.bat`**：脚本会自动找 JDK 17、检查 MySQL/Redis、起后端与前端、轮询探活，最后打印所有访问地址；`stop.bat` 按端口精确停止（不会误杀别的 Java/Node 进程）。
+> 下面 3.1～3.4 是手动步骤，两者等价；完整部署说明（含环境变量踩坑、Nginx、Docker、systemd）见 **`docs/DEPLOYMENT.md`**。
 
 ### 3.1 建库建表
 
