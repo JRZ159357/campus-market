@@ -1,0 +1,70 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/category/index",
+    "pages/message/index",
+    "pages/profile/index",
+    "pages/login/index",
+    "pages/login/register",
+    "pages/profile/edit",
+    "pages/profile/setting",
+    "pages/profile/about",
+    "pages/profile/security",
+    "pages/auth/student",
+    "pages/publish/index",
+    "pages/product/my",
+    "pages/product/detail",
+    "pages/product/list",
+    "pages/search/index",
+    "pages/favorite/index",
+    "pages/follow/index",
+    "pages/order/confirm",
+    "pages/order/detail",
+    "pages/order/list",
+    "pages/address/list",
+    "pages/address/edit",
+    "pages/chat/index",
+    "pages/notice/detail",
+    "pages/review/edit",
+    "pages/review/follow",
+    "pages/review/list",
+    "pages/review/pending",
+    "pages/user/home",
+    "pages/report/index",
+    "pages/report/my"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#FF6B35",
+    "navigationBarTitleText": "校园二手",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#FF6B35",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/index",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/message/index",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

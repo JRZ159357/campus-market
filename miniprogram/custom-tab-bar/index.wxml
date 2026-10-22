@@ -1,0 +1,23 @@
+<!-- 文件路径: miniprogram/custom-tab-bar/index.wxml -->
+<view class="tabbar">
+  <view
+    wx:for="{{list}}"
+    wx:key="key"
+    class="tabbar__item {{item.center ? 'tabbar__item--center' : ''}}"
+    data-index="{{index}}"
+    bindtap="onTap"
+  >
+    <block wx:if="{{item.center}}">
+      <view class="tabbar__plus">＋</view>
+      <view class="tabbar__publish">发布</view>
+    </block>
+    <block wx:else>
+      <view class="tabbar__icon-wrap">
+        <view class="tabbar__icon {{selected === index ? 'tabbar__icon--active' : ''}}">{{item.icon}}</view>
+        <!-- 消息角标：未读总数，超过 99 显示 99+ -->
+        <view wx:if="{{item.key === 'message' && unreadText}}" class="tabbar__badge">{{unreadText}}</view>
+      </view>
+      <view class="tabbar__label {{selected === index ? 'tabbar__label--active' : ''}}">{{item.label}}</view>
+    </block>
+  </view>
+</view>

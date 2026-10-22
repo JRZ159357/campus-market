@@ -1,0 +1,57 @@
+# ==================== Java / Maven ====================
+target/
+*.class
+*.jar
+!**/maven-wrapper.jar
+
+# ==================== Node / 前端 ====================
+node_modules/
+dist/
+.vite/
+*.local
+
+# ==================== IDE ====================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ==================== 日志 ====================
+logs/
+*.log
+
+# ==================== 上传文件 ====================
+# 运行时上传目录整体忽略：里面是用户上传的图片、冒烟测试的临时图，属于数据不是代码。
+# 但演示数据脚本 init_demo_data.sql 依赖下列固定素材，必须随仓库发布，
+# 否则新环境跑完脚本后商品图与轮播图全是问号。因此采用「先全忽略 + 白名单放行」的写法。
+/uploads/
+/backend/uploads/*
+!/backend/uploads/demo/
+!/backend/uploads/2026/
+/backend/uploads/2026/*
+!/backend/uploads/2026/10/
+/backend/uploads/2026/10/*
+!/backend/uploads/2026/10/seed-banner-*.png
+
+# ==================== 环境变量与密钥 ====================
+.env
+.env.local
+.env.*.local
+
+# ==================== 系统文件 ====================
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ==================== Python ====================
+__pycache__/
+*.pyc
+*.pyo
+
+# ==================== 小程序 ====================
+miniprogram/project.private.config.json
+
+# ==================== 测试运行时产物 ====================
+# 演示数据播种脚本记录的临时 ID 文件，每次运行都会重写，不入库
+tests/.module*.json

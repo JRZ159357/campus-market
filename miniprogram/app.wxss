@@ -1,0 +1,256 @@
+/* 文件路径: miniprogram/app.wxss */
+
+page {
+  background: #f5f5f5;
+  color: #333;
+  font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+/* 主色按钮 */
+.btn-primary {
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  line-height: 88rpx;
+  text-align: center;
+  border: none;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-primary[disabled] {
+  background: #ffb59b;
+  color: #fff;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #ff6b35;
+  border: 1rpx solid #ff6b35;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  line-height: 86rpx;
+  text-align: center;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.card__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20rpx;
+}
+
+/* 学生认证徽章 */
+.badge-student {
+  display: inline-flex;
+  align-items: center;
+  height: 34rpx;
+  padding: 0 12rpx;
+  border-radius: 17rpx;
+  background: linear-gradient(90deg, #ff6b35, #ff9a6b);
+  color: #fff;
+  font-size: 20rpx;
+  line-height: 1;
+}
+
+/* 文本 */
+.text-muted {
+  color: #999;
+  font-size: 24rpx;
+}
+
+.text-danger {
+  color: #f56c6c;
+}
+
+.text-primary {
+  color: #ff6b35;
+}
+
+/* 状态标签 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  line-height: 32rpx;
+}
+
+.tag--wait {
+  background: #fff7e6;
+  color: #e6a23c;
+}
+
+.tag--pass {
+  background: #f0f9eb;
+  color: #67c23a;
+}
+
+.tag--reject {
+  background: #fef0f0;
+  color: #f56c6c;
+}
+
+/* 订单状态标签配色：待付款橙、待发货蓝、待收货紫、已完成绿、已取消灰、退款红 */
+.order-tag--pay {
+  background: #fff7e6;
+  color: #e6a23c;
+}
+
+.order-tag--ship {
+  background: #ecf5ff;
+  color: #409eff;
+}
+
+.order-tag--receive {
+  background: #f4f0ff;
+  color: #8b5cf6;
+}
+
+.order-tag--done {
+  background: #f0f9eb;
+  color: #67c23a;
+}
+
+.order-tag--cancel {
+  background: #f4f4f5;
+  color: #909399;
+}
+
+.order-tag--refund {
+  background: #fef0f0;
+  color: #f56c6c;
+}
+
+.order-tag--refunded {
+  background: #f4f4f5;
+  color: #b1b3b8;
+}
+
+/* 底部固定操作栏共用样式 */
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.action-bar__btn {
+  min-width: 180rpx;
+  padding: 0 32rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 36rpx;
+  font-size: 27rpx;
+  text-align: center;
+  background: #fff;
+  color: #666;
+  border: 1rpx solid #dcdfe6;
+}
+
+.action-bar__btn::after {
+  border: none;
+}
+
+.action-bar__btn--primary {
+  background: linear-gradient(90deg, #ff6b35, #ff8c5a);
+  color: #fff;
+  border: none;
+  font-weight: 500;
+}
+
+.action-bar__btn--ghost {
+  color: #ff6b35;
+  border-color: #ff6b35;
+}
+
+.action-bar__btn--disabled {
+  background: #f2f2f2;
+  color: #bbb;
+  border-color: #eee;
+}
+
+/*
+ * 「更多」按钮：举报等低频入口的容器。
+ * 用 ⋯ 而不是文字「举报」，是因为举报是低频且需要理由的动作，
+ * 放在显眼位置会诱导用户把「不想要」也当举报提交，淹没客服队列。
+ */
+.action-bar__more {
+  flex: none;
+  width: 72rpx;
+  height: 72rpx;
+  line-height: 64rpx;
+  border-radius: 36rpx;
+  border: 1rpx solid #dcdfe6;
+  background: #fff;
+  color: #909399;
+  font-size: 40rpx;
+  text-align: center;
+}
+
+/* 底部留白，避免内容被固定栏遮挡 */
+.bottom-space {
+  height: 160rpx;
+}
+
+/* 空态 */
+.empty {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #bbb;
+  font-size: 26rpx;
+}
+
+/* 加载动画 */
+.loading-wrap {
+  padding: 160rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.spinner {
+  width: 56rpx;
+  height: 56rpx;
+  border: 5rpx solid #ffd9cb;
+  border-top-color: #ff6b35;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
