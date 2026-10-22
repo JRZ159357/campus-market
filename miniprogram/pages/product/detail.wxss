@@ -1,0 +1,453 @@
+/* 文件路径: miniprogram/pages/product/detail.wxss */
+.detail {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* 轮播 */
+.gallery {
+  position: relative;
+  background: #fff;
+}
+
+.gallery__swiper {
+  width: 100%;
+  height: 750rpx;
+}
+
+.gallery__img {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+}
+
+.gallery__counter {
+  position: absolute;
+  right: 24rpx;
+  bottom: 60rpx;
+  padding: 4rpx 18rpx;
+  border-radius: 20rpx;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 22rpx;
+}
+
+/* 状态提示 */
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx 28rpx;
+  background: #fff7e6;
+  color: #e6a23c;
+  font-size: 24rpx;
+}
+
+.status-banner__label {
+  font-weight: 600;
+}
+
+.status-banner__reason {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #b88230;
+}
+
+/* 信息卡 */
+.card {
+  margin: 20rpx 24rpx 0;
+}
+
+.info__price-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.info__price {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #ff6b35;
+  line-height: 1.1;
+}
+
+.info__original {
+  margin-left: 14rpx;
+  font-size: 26rpx;
+  color: #bbb;
+  text-decoration: line-through;
+}
+
+.info__price-row .badge-student {
+  margin-left: auto;
+  align-self: center;
+}
+
+.info__title {
+  margin-top: 16rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.45;
+}
+
+.info__meta {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 14rpx;
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+/* 卖家卡 */
+.seller {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.seller__left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.seller__avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  flex: none;
+}
+
+.seller__avatar--text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffd0bf, #ffb59b);
+  color: #fff;
+  font-size: 34rpx;
+}
+
+.seller__info {
+  margin-left: 20rpx;
+  min-width: 0;
+}
+
+.seller__name {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 29rpx;
+  color: #222;
+  font-weight: 500;
+}
+
+.seller__meta {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+.seller__follow {
+  flex: none;
+  padding: 10rpx 26rpx;
+  border: 1rpx solid #ff6b35;
+  border-radius: 30rpx;
+  color: #ff6b35;
+  font-size: 24rpx;
+  background: #fff;
+  transition: all 0.22s ease;
+}
+
+/* 已关注：灰色填充，与「+ 关注」形成明确的状态对比 */
+.seller__follow--on {
+  color: #999;
+  border-color: #e2e2e2;
+  background: #f4f4f4;
+}
+
+.seller__follow:active {
+  transform: scale(0.94);
+}
+
+/* 描述 */
+.desc__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 16rpx;
+}
+
+.desc__text {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.bottom-space {
+  height: 160rpx;
+}
+
+/* 底部栏 */
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 14rpx 24rpx calc(14rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -6rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.bar__icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  font-size: 20rpx;
+  color: #666;
+}
+
+.bar__emoji {
+  font-size: 36rpx;
+  line-height: 1.2;
+}
+
+.bar__emoji--star {
+  transition: color 0.2s ease;
+}
+
+.bar__icon--active {
+  color: #ff6b35;
+}
+
+/* 收藏点击动画：scale 0.8 -> 1，配合收藏态切换给出即时反馈 */
+.bar__icon--pop .bar__emoji {
+  animation: fav-pop 0.32s ease;
+}
+
+@keyframes fav-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bar__btn {
+  flex: 1;
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 42rpx;
+  background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+  color: #fff;
+  font-size: 31rpx;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.bar__btn::after {
+  border: none;
+}
+
+.bar__btn--owner {
+  background: #fff;
+  color: #ff6b35;
+  border: 2rpx solid #ff6b35;
+  line-height: 80rpx;
+}
+
+/* 已售出 / 已下架：按钮置灰不可点，与"我想要"形成明确区分 */
+.bar__btn--disabled {
+  background: #ececee;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.empty__icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.empty__btn {
+  width: 280rpx;
+  margin: 32rpx auto 0;
+}
+
+/* ===== 评价摘要 ===== */
+.rvs__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rvs__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.rvs__more {
+  font-size: 23rpx;
+  color: #ff6b35;
+}
+
+.rvs__summary {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+
+.rvs__score {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #ff6b35;
+  line-height: 1;
+}
+
+.rvs__stars {
+  display: flex;
+}
+
+.rvs__stars--sm .rvs__star {
+  font-size: 20rpx;
+}
+
+.rvs__star {
+  font-size: 24rpx;
+  color: #e0e0e0;
+}
+
+.rvs__star--on {
+  color: #ff6b35;
+}
+
+.rvs__rate {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.rvs__item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.rvs__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.rvs__user {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.rvs__avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #f2f2f2;
+}
+
+.rvs__avatar--anon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: #9a9a9a;
+  background: #ececec;
+}
+
+.rvs__name {
+  font-size: 24rpx;
+  color: #555;
+}
+
+.rvs__time {
+  margin-left: auto;
+  font-size: 20rpx;
+  color: #bbb;
+}
+
+.rvs__content {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rvs__images {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 12rpx;
+}
+
+.rvs__img {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  background: #f2f2f2;
+}
+
+.rvs__follow {
+  margin-top: 12rpx;
+  padding: 12rpx 16rpx;
+  background: #f7f7f7;
+  border-radius: 12rpx;
+}
+
+.rvs__follow-tag {
+  font-size: 21rpx;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.rvs__follow-text {
+  font-size: 24rpx;
+  color: #555;
+}
+
+.rvs__reply {
+  margin-top: 10rpx;
+  padding: 12rpx 16rpx;
+  background: #eef5ff;
+  border-radius: 12rpx;
+}
+
+.rvs__reply-tag {
+  font-size: 21rpx;
+  color: #409eff;
+  font-weight: 600;
+}
+
+.rvs__reply-text {
+  font-size: 24rpx;
+  color: #4a5a6a;
+}
+
+.rvs__empty {
+  padding: 28rpx 0 10rpx;
+  text-align: center;
+  font-size: 23rpx;
+  color: #bbb;
+}

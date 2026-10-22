@@ -1,0 +1,21 @@
+<!-- 文件路径: miniprogram/components/product-card/index.wxml -->
+<view class="pcard" bindtap="onTap">
+  <view class="pcard__cover">
+    <image class="pcard__img" src="{{cover}}" mode="widthFix" lazy-load />
+    <view wx:if="{{item.isVerifiedSeller === 1}}" class="pcard__badge">学生认证</view>
+  </view>
+  <view class="pcard__body">
+    <view class="pcard__title">{{item.title}}</view>
+    <view class="pcard__price">
+      <text class="pcard__yuan">¥</text>
+      <text class="pcard__num">{{priceText}}</text>
+      <text wx:if="{{originText}}" class="pcard__origin">¥{{originText}}</text>
+    </view>
+    <view class="pcard__foot">
+      <image wx:if="{{avatar}}" class="pcard__avatar" src="{{avatar}}" mode="aspectFill" />
+      <view wx:else class="pcard__avatar pcard__avatar--text">{{avatarText}}</view>
+      <text class="pcard__seller">{{item.sellerNickname || '校园用户'}}</text>
+      <text class="pcard__views">{{item.viewCount || 0}}人看过</text>
+    </view>
+  </view>
+</view>

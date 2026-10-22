@@ -1,0 +1,161 @@
+/* 文件路径: miniprogram/pages/category/index.wxss */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  flex: none;
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 68rpx;
+  padding: 0 22rpx;
+  background: #f5f5f5;
+  border-radius: 34rpx;
+}
+
+.search__icon {
+  font-size: 24rpx;
+  margin-right: 10rpx;
+}
+
+.search__placeholder {
+  font-size: 25rpx;
+  color: #aaa;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.filter {
+  margin-left: 20rpx;
+  font-size: 26rpx;
+  color: #ff6b35;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* 左侧分类栏 */
+.side {
+  width: 176rpx;
+  flex: none;
+  background: #f7f7f7;
+  height: 100%;
+}
+
+.side__item {
+  position: relative;
+  padding: 30rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.side__item--active {
+  background: #f5f5f5;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.side__item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 36rpx;
+  border-radius: 0 4rpx 4rpx 0;
+  background: #ff6b35;
+}
+
+.side__placeholder {
+  height: 40rpx;
+}
+
+/* 右侧列表 */
+.main {
+  flex: 1;
+  height: 100%;
+  background: #f5f5f5;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+
+.sortbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 18rpx 8rpx;
+  margin: 0 -20rpx 16rpx;
+  background: #f5f5f5;
+}
+
+.sortbar__item {
+  margin-right: 40rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.sortbar__item--active {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.sortbar__arrow {
+  font-size: 20rpx;
+  margin-left: 2rpx;
+}
+
+.waterfall {
+  display: flex;
+  justify-content: space-between;
+}
+
+.waterfall__col {
+  width: calc(50% - 6rpx);
+}
+
+.loadmore {
+  padding: 28rpx 0 40rpx;
+  text-align: center;
+  font-size: 23rpx;
+  color: #b0b0b0;
+}
+
+.empty {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.empty__icon {
+  font-size: 72rpx;
+  margin-bottom: 16rpx;
+}
+
+.empty__tip {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #bbb;
+}

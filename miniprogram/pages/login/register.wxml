@@ -1,0 +1,122 @@
+<!-- 文件路径: miniprogram/pages/login/register.wxml -->
+<view class="reg">
+  <view class="reg__hero">
+    <view class="reg__title">创建账号</view>
+    <view class="reg__subtitle">注册后即可浏览、收藏与下单，完成学生认证后可发布闲置</view>
+  </view>
+
+  <view class="card">
+    <!-- 账号 -->
+    <view class="field {{errors.username ? 'field--error' : ''}} {{focused === 'username' ? 'field--focus' : ''}}">
+      <view class="icon">
+        <view class="icon-user__head"></view>
+        <view class="icon-user__body"></view>
+      </view>
+      <input
+        class="field__input"
+        value="{{username}}"
+        placeholder="账号（4-20位字母或数字）"
+        placeholder-class="field__placeholder"
+        maxlength="20"
+        data-field="username"
+        bindfocus="onFocus"
+        bindblur="onBlur"
+        bindinput="onUsername"
+      />
+      <view wx:if="{{usernameState === 'checking'}}" class="check check--loading">校验中</view>
+      <view wx:elif="{{usernameState === 'ok'}}" class="check check--ok">可用</view>
+      <view wx:elif="{{usernameState === 'taken'}}" class="check check--taken">已占用</view>
+    </view>
+    <view wx:if="{{errors.username}}" class="field__error">{{errors.username}}</view>
+
+    <!-- 密码 -->
+    <view class="field {{errors.password ? 'field--error' : ''}} {{focused === 'password' ? 'field--focus' : ''}}">
+      <view class="icon">
+        <view class="icon-lock__shackle"></view>
+        <view class="icon-lock__body"></view>
+      </view>
+      <input
+        class="field__input"
+        value="{{password}}"
+        password="{{!showPassword}}"
+        placeholder="密码（6-20位）"
+        placeholder-class="field__placeholder"
+        maxlength="20"
+        data-field="password"
+        bindfocus="onFocus"
+        bindblur="onBlur"
+        bindinput="onPassword"
+      />
+      <view class="eye" bindtap="togglePassword">
+        <view class="eye__outer"></view>
+        <view class="eye__pupil"></view>
+        <view wx:if="{{!showPassword}}" class="eye__slash"></view>
+      </view>
+    </view>
+    <view wx:if="{{strength > 0}}" class="strength">
+      <view class="strength__bars">
+        <view class="strength__bar {{strength >= 1 ? 'strength__bar--on strength__bar--1' : ''}}"></view>
+        <view class="strength__bar {{strength >= 2 ? 'strength__bar--on strength__bar--2' : ''}}"></view>
+        <view class="strength__bar {{strength >= 3 ? 'strength__bar--on strength__bar--3' : ''}}"></view>
+      </view>
+      <text class="strength__text">{{strengthText}}</text>
+    </view>
+    <view wx:if="{{errors.password}}" class="field__error">{{errors.password}}</view>
+
+    <!-- 确认密码 -->
+    <view class="field {{errors.confirmPassword ? 'field--error' : ''}} {{focused === 'confirm' ? 'field--focus' : ''}}">
+      <view class="icon">
+        <view class="icon-lock__shackle"></view>
+        <view class="icon-lock__body"></view>
+      </view>
+      <input
+        class="field__input"
+        value="{{confirmPassword}}"
+        password="{{!showPassword}}"
+        placeholder="确认密码"
+        placeholder-class="field__placeholder"
+        maxlength="20"
+        data-field="confirm"
+        bindfocus="onFocus"
+        bindblur="onBlur"
+        bindinput="onConfirm"
+      />
+    </view>
+    <view wx:if="{{errors.confirmPassword}}" class="field__error">{{errors.confirmPassword}}</view>
+
+    <!-- 昵称 -->
+    <view class="field {{errors.nickname ? 'field--error' : ''}} {{focused === 'nickname' ? 'field--focus' : ''}}">
+      <view class="icon">
+        <view class="icon-tag"></view>
+      </view>
+      <input
+        class="field__input"
+        value="{{nickname}}"
+        placeholder="昵称（选填，默认使用账号）"
+        placeholder-class="field__placeholder"
+        maxlength="20"
+        data-field="nickname"
+        bindfocus="onFocus"
+        bindblur="onBlur"
+        bindinput="onNickname"
+      />
+    </view>
+    <view wx:if="{{errors.nickname}}" class="field__error">{{errors.nickname}}</view>
+
+    <button
+      class="btn-gradient"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+      bindtap="handleSubmit"
+    >
+      {{submitting ? '注册中...' : '注 册'}}
+    </button>
+
+    <view class="tip">注册即表示同意《用户协议》与《隐私政策》</view>
+  </view>
+
+  <view class="bottom">
+    <text class="bottom__text">已有账号？</text>
+    <text class="bottom__action" bindtap="goLogin">去登录</text>
+  </view>
+</view>

@@ -1,0 +1,182 @@
+<!-- 文件路径: miniprogram/pages/product/detail.wxml -->
+<view class="detail">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <!-- 错误态 -->
+  <view wx:elif="{{error}}" class="empty">
+    <view class="empty__icon">🔍</view>
+    <view>商品不存在或已下架</view>
+    <button class="btn-ghost empty__btn" bindtap="retry">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <!-- 图片轮播 -->
+    <view class="gallery">
+      <swiper
+        class="gallery__swiper"
+        circular="{{detail.images.length > 1}}"
+        indicator-dots="{{detail.images.length > 1}}"
+        indicator-color="rgba(255,255,255,0.5)"
+        indicator-active-color="#FF6B35"
+        bindchange="onSwiperChange"
+      >
+        <swiper-item wx:for="{{detail.images}}" wx:key="*this">
+          <image
+            class="gallery__img"
+            src="{{item}}"
+            mode="aspectFill"
+            data-index="{{index}}"
+            bindtap="previewImage"
+          />
+        </swiper-item>
+      </swiper>
+      <view wx:if="{{detail.images.length}}" class="gallery__counter">
+        {{current + 1}}/{{detail.images.length}}
+      </view>
+    </view>
+
+    <!-- 非在售状态提示（仅卖家本人或管理员可见） -->
+    <view wx:if="{{detail.status !== 1}}" class="status-banner">
+      <text class="status-banner__label">{{detail.statusLabel}}</text>
+      <text wx:if="{{detail.auditReason}}" class="status-banner__reason">{{detail.auditReason}}</text>
+    </view>
+
+    <!-- 价格 / 标题 -->
+    <view class="card info">
+      <view class="info__price-row">
+        <text class="info__price">¥{{detail.priceText}}</text>
+        <text wx:if="{{detail.originalPriceText}}" class="info__original">¥{{detail.originalPriceText}}</text>
+        <text wx:if="{{detail.isVerifiedSeller}}" class="badge-student">学生认证</text>
+      </view>
+      <view class="info__title">{{detail.title}}</view>
+      <view class="info__meta">
+        <text>{{detail.timeText}}</text>
+        <text>{{detail.viewCount || 0}} 浏览</text>
+        <text>{{detail.favoriteCount || 0}} 收藏</text>
+        <text>{{detail.categoryName}}</text>
+      </view>
+    </view>
+
+    <!-- 卖家信息 -->
+    <view class="card seller">
+      <view class="seller__left" data-id="{{detail.seller.id}}" bindtap="goSellerHome">
+        <image wx:if="{{detail.seller.avatarUrl}}" class="seller__avatar" src="{{detail.seller.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="seller__avatar seller__avatar--text">{{detail.seller.initial}}</view>
+        <view class="seller__info">
+          <view class="seller__name">
+            {{detail.seller.nickname || '校园用户'}}
+            <text wx:if="{{detail.seller.studentVerified}}" class="badge-student">学生认证</text>
+          </view>
+          <view class="seller__meta">
+            信誉分 {{detail.seller.creditScore || 100}} · 在售 {{detail.seller.onSaleCount || 0}} 件 · 粉丝 {{detail.seller.fansCount || 0}}
+          </view>
+        </view>
+      </view>
+      <!-- 卖家本人看自己的商品不展示关注按钮 -->
+      <view
+        wx:if="{{!detail.isOwner}}"
+        class="seller__follow {{detail.seller.followed ? 'seller__follow--on' : ''}}"
+        catchtap="follow"
+      >
+        {{detail.seller.followed ? '已关注' : '+ 关注'}}
+      </view>
+    </view>
+
+    <!-- 描述 -->
+    <view class="card desc">
+      <view class="desc__title">商品描述</view>
+      <text class="desc__text">{{detail.description || '卖家很懒，没有填写描述'}}</text>
+    </view>
+
+    <!-- 评价摘要：只看最新两条，完整列表跳独立页 -->
+    <view class="card rvs">
+      <view class="rvs__head">
+        <text class="rvs__title">商品评价</text>
+        <text wx:if="{{reviewStat.total}}" class="rvs__more" bindtap="goReviews">全部 {{reviewStat.total}} 条 ›</text>
+      </view>
+
+      <view wx:if="{{reviewStat.total}}" class="rvs__summary">
+        <text class="rvs__score">{{reviewStat.avgStars}}</text>
+        <view class="rvs__stars">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="rvs__star {{reviewStat.avgStars >= item ? 'rvs__star--on' : ''}}">★</text>
+        </view>
+        <text class="rvs__rate">好评率 {{reviewStat.goodRate}}%</text>
+      </view>
+
+      <block wx:if="{{reviews.length}}">
+        <view wx:for="{{reviews}}" wx:key="id" wx:for-index="rIndex" class="rvs__item" catchlongpress="onReviewLongPress">
+          <view class="rvs__user">
+            <image wx:if="{{item.avatar}}" class="rvs__avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view wx:else class="rvs__avatar rvs__avatar--anon">{{item.avatarText}}</view>
+            <text class="rvs__name">{{item.reviewerNickname}}</text>
+            <view class="rvs__stars rvs__stars--sm">
+              <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this" class="rvs__star {{item.stars >= star ? 'rvs__star--on' : ''}}">★</text>
+            </view>
+            <text class="rvs__time">{{item.timeText}}</text>
+          </view>
+          <text wx:if="{{item.content}}" class="rvs__content">{{item.content}}</text>
+          <view wx:if="{{item.images.length}}" class="rvs__images">
+            <image
+              wx:for="{{item.images}}"
+              wx:for-item="img"
+              wx:for-index="imgIndex"
+              wx:key="*this"
+              class="rvs__img"
+              src="{{img}}"
+              mode="aspectFill"
+              data-review="{{rIndex}}"
+              data-img-index="{{imgIndex}}"
+              bindtap="previewReviewImage"
+            />
+          </view>
+          <view wx:if="{{item.followContent}}" class="rvs__follow">
+            <text class="rvs__follow-tag">追评：</text>
+            <text class="rvs__follow-text">{{item.followContent}}</text>
+          </view>
+          <view wx:if="{{item.replyContent}}" class="rvs__reply">
+            <text class="rvs__reply-tag">卖家回复：</text>
+            <text class="rvs__reply-text">{{item.replyContent}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:else class="rvs__empty">
+        <text>还没有评价，完成交易后可以来写第一条</text>
+      </view>
+    </view>
+
+    <view class="bottom-space"></view>
+
+    <!-- 底部固定栏 -->
+    <view class="bar">
+      <block wx:if="{{detail.isOwner}}">
+        <view class="bar__icon" bindtap="contact"><text class="bar__emoji">💬</text><text>客服</text></view>
+        <button class="bar__btn bar__btn--owner" bindtap="goMyProducts">管理我的商品</button>
+      </block>
+      <block wx:else>
+        <view class="bar__icon" bindtap="contactSeller"><text class="bar__emoji">💬</text><text>联系卖家</text></view>
+        <view
+          class="bar__icon {{detail.favorited ? 'bar__icon--active' : ''}} {{favAnim ? 'bar__icon--pop' : ''}}"
+          bindtap="favorite"
+        >
+          <text class="bar__emoji bar__emoji--star">{{detail.favorited ? '★' : '☆'}}</text>
+          <text>{{detail.favLabel}}</text>
+        </view>
+        <!-- 更多：举报入口放在这里而不是页面上显眼处，
+             避免用户把「不想要」也当举报提交，淹没客服队列 -->
+        <view class="bar__icon" bindtap="showMoreActions">
+          <text class="bar__emoji">⋯</text>
+          <text>更多</text>
+        </view>
+        <button wx:if="{{detail.status === 1}}" class="bar__btn" bindtap="want">我想要</button>
+        <button wx:else class="bar__btn bar__btn--disabled" disabled>
+          {{detail.status === 3 ? '已售出' : '暂不可购买'}}
+        </button>
+      </block>
+    </view>
+  </block>
+</view>

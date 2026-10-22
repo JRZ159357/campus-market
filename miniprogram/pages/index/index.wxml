@@ -1,0 +1,138 @@
+<!-- 文件路径: miniprogram/pages/index/index.wxml -->
+<view class="home">
+  <!-- 顶部搜索栏 + 消息入口 -->
+  <view class="topbar">
+    <view class="search" bindtap="goSearch">
+      <text class="search__icon">🔍</text>
+      <text class="search__placeholder">搜索 {{hotWord || '校园好物'}}</text>
+    </view>
+    <view class="msg" bindtap="goMessages">
+      <text class="msg__icon">💬</text>
+      <view class="msg__dot"></view>
+    </view>
+  </view>
+
+  <!-- 公告栏：有公告且未被本次会话关闭时才显示 -->
+  <view wx:if="{{notice && !noticeClosed}}" class="notice" bindtap="onNoticeTap">
+    <text class="notice__icon">📢</text>
+    <view class="notice__track">
+      <text class="notice__text">{{notice.text}}</text>
+    </view>
+    <view class="notice__close" catchtap="onNoticeClose">✕</view>
+  </view>
+
+  <!-- 错误态 -->
+  <view wx:if="{{error}}" class="error">
+    <view class="error__icon">😵</view>
+    <view class="error__text">首页加载失败，请检查网络</view>
+    <view class="error__btn" bindtap="retry">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <!-- 轮播图：linkType=4 为纯展示海报，点击无跳转 -->
+    <swiper
+      wx:if="{{banners.length}}"
+      class="banner"
+      indicator-dots
+      indicator-color="rgba(255,255,255,0.45)"
+      indicator-active-color="#ffffff"
+      autoplay
+      interval="3000"
+      duration="400"
+      circular
+    >
+      <swiper-item wx:for="{{banners}}" wx:key="id" data-index="{{index}}" bindtap="onBannerTap">
+        <image class="banner__img" src="{{item.imageFull}}" mode="aspectFill" />
+        <view class="banner__mask"></view>
+        <view class="banner__title">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+
+    <!-- 无轮播图时的降级横幅：不伪造数据，也不留白 -->
+    <view wx:else class="banner banner--empty">
+      <view class="banner__slogan">校园闲置 · 放心交易</view>
+      <view class="banner__sub">认证学生发布 · 平台审核上架</view>
+    </view>
+
+    <!-- 金刚区：显示哪些分类、什么顺序由管理端配置 -->
+    <view wx:if="{{categories.length}}" class="cats">
+      <view
+        wx:for="{{categories}}"
+        wx:key="name"
+        class="cats__item"
+        data-id="{{item.id}}"
+        data-more="{{item.isMore}}"
+        bindtap="goCategory"
+      >
+        <view class="cats__icon">
+          <image wx:if="{{item.isImage}}" class="cats__img" src="{{item.iconFull}}" mode="aspectFit" />
+          <text wx:else class="cats__emoji">{{item.icon}}</text>
+        </view>
+        <view class="cats__label">{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- 热门推荐：横向滚动，手动选品按运营顺序 / 自动模式按热度 -->
+    <view wx:if="{{hotProducts.length}}" class="section">
+      <view class="section__head">
+        <text class="section__title">热门推荐</text>
+        <text class="section__sub">大家都在看</text>
+      </view>
+      <scroll-view class="hot" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="hot__row">
+          <view
+            wx:for="{{hotProducts}}"
+            wx:key="id"
+            class="hot__item"
+            data-id="{{item.id}}"
+            bindtap="goDetail"
+          >
+            <view class="hot__cover">
+              <image class="hot__img" src="{{item.coverFull}}" mode="aspectFill" lazy-load />
+              <view wx:if="{{item.isVerifiedSeller === 1}}" class="hot__badge">学生认证</view>
+            </view>
+            <view class="hot__title">{{item.title}}</view>
+            <view class="hot__price"><text class="hot__yuan">¥</text>{{item.priceText}}</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 最新发布：双列瀑布流 -->
+    <view class="section">
+      <view class="section__head">
+        <text class="section__title">最新发布</text>
+        <text class="section__sub">下拉刷新</text>
+      </view>
+
+      <view wx:if="{{loading}}" class="loading-wrap">
+        <view class="spinner"></view>
+        <view>正在加载好物…</view>
+      </view>
+
+      <view wx:elif="{{!left.length && !right.length}}" class="empty">
+        <view class="empty__icon">🛍</view>
+        <view>还没有上架的商品</view>
+        <view class="empty__tip">认证学生发布后经审核即可出现在这里</view>
+      </view>
+
+      <view wx:else class="waterfall">
+        <view class="waterfall__col">
+          <product-card wx:for="{{left}}" wx:key="id" item="{{item}}" />
+        </view>
+        <view class="waterfall__col">
+          <product-card wx:for="{{right}}" wx:key="id" item="{{item}}" />
+        </view>
+      </view>
+
+      <view wx:if="{{left.length || right.length}}" class="loadmore">
+        <block wx:if="{{loadingMore}}">
+          <view class="loadmore__dot"></view>
+          <text>加载中…</text>
+        </block>
+        <text wx:elif="{{!hasMore}}">— 没有更多了 —</text>
+        <text wx:else>上拉加载更多</text>
+      </view>
+    </view>
+  </block>
+</view>

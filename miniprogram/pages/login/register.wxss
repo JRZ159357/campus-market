@@ -1,0 +1,166 @@
+/* 文件路径: miniprogram/pages/login/register.wxss */
+/* 复用登录页的输入框、图标与按钮样式，保证两端视觉一致 */
+@import './index.wxss';
+
+.reg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ff6b35 0%, #ff8c5a 26%, #f5f5f5 26%, #f5f5f5 100%);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+.reg__hero {
+  padding: 52rpx 48rpx 44rpx;
+  color: #fff;
+}
+
+.reg__title {
+  font-size: 42rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.reg__subtitle {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.card {
+  margin: 0 40rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 36rpx 36rpx 30rpx;
+  box-shadow: 0 16rpx 48rpx rgba(255, 107, 53, 0.14);
+}
+
+.field {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.field + .field,
+.field__error + .field,
+.strength + .field {
+  margin-top: 24rpx;
+}
+
+.field__error + .field {
+  margin-top: 24rpx;
+}
+
+/* 账号校验状态 */
+.check {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  flex: none;
+}
+
+.check--loading {
+  color: #909399;
+  background: #f4f4f5;
+}
+
+.check--ok {
+  color: #67c23a;
+  background: #f0f9eb;
+}
+
+.check--taken {
+  color: #f56c6c;
+  background: #fef0f0;
+}
+
+/* 密码强度 */
+.strength {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin: 14rpx 4rpx 0;
+}
+
+.strength__bars {
+  display: flex;
+  gap: 8rpx;
+  flex: 1;
+}
+
+.strength__bar {
+  flex: 1;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: #ebeef5;
+  transition: background 0.2s;
+}
+
+.strength__bar--on.strength__bar--1 {
+  background: #f56c6c;
+}
+
+.strength__bar--on.strength__bar--2 {
+  background: #e6a23c;
+}
+
+.strength__bar--on.strength__bar--3 {
+  background: #67c23a;
+}
+
+.strength__text {
+  font-size: 22rpx;
+  color: #909399;
+  flex: none;
+}
+
+/* 昵称图标 */
+.icon-tag {
+  width: 26rpx;
+  height: 22rpx;
+  border: 3rpx solid #b8bcc4;
+  border-radius: 6rpx;
+  margin: 5rpx auto 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.icon-tag::after {
+  content: '';
+  position: absolute;
+  right: -8rpx;
+  top: 6rpx;
+  width: 8rpx;
+  height: 8rpx;
+  background: #fff;
+  border: 3rpx solid #b8bcc4;
+  border-left: none;
+  border-radius: 0 4rpx 4rpx 0;
+  box-sizing: border-box;
+}
+
+.btn-gradient {
+  margin-top: 40rpx;
+}
+
+.tip {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #b8bcc4;
+}
+
+.bottom {
+  margin-top: 36rpx;
+  text-align: center;
+  font-size: 26rpx;
+}
+
+.bottom__text {
+  color: #909399;
+}
+
+.bottom__action {
+  color: #ff6b35;
+  font-weight: 600;
+  margin-left: 6rpx;
+}

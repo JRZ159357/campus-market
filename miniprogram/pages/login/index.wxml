@@ -1,0 +1,125 @@
+<!-- 文件路径: miniprogram/pages/login/index.wxml -->
+<view class="login">
+  <!-- 品牌区 -->
+  <view class="hero">
+    <view class="hero__logo">校</view>
+    <view class="hero__title">校园二手交易平台</view>
+    <view class="hero__slogan">让闲置流动起来</view>
+  </view>
+
+  <!-- 登录卡片 -->
+  <view class="card">
+    <!-- 登录方式切换 -->
+    <view class="tabs">
+      <view
+        class="tabs__item {{mode === 'wx' ? 'tabs__item--active' : ''}}"
+        data-mode="wx"
+        bindtap="switchMode"
+      >微信登录</view>
+      <view
+        class="tabs__item {{mode === 'account' ? 'tabs__item--active' : ''}}"
+        data-mode="account"
+        bindtap="switchMode"
+      >账号登录</view>
+      <view class="tabs__line" style="left: {{mode === 'wx' ? '8%' : '52%'}}"></view>
+    </view>
+
+    <!-- 微信登录 -->
+    <block wx:if="{{mode === 'wx'}}">
+      <button
+        class="wx-btn"
+        loading="{{logging}}"
+        disabled="{{logging}}"
+        bindtap="handleWxLogin"
+      >
+        <view class="wx-icon">
+          <view class="wx-icon__bubble wx-icon__bubble--big"></view>
+          <view class="wx-icon__bubble wx-icon__bubble--small"></view>
+        </view>
+        <text>{{logging ? '登录中...' : '微信一键登录'}}</text>
+      </button>
+
+      <view class="divider"><text class="divider__text">其他登录方式</text></view>
+
+      <view class="other" data-mode="account" bindtap="switchMode">
+        <view class="other__icon">
+          <view class="icon-user__head"></view>
+          <view class="icon-user__body"></view>
+        </view>
+        <text class="other__text">使用账号密码登录</text>
+      </view>
+    </block>
+
+    <!-- 账号登录 -->
+    <block wx:else>
+      <view class="field {{errors.username ? 'field--error' : ''}} {{focused === 'username' ? 'field--focus' : ''}}">
+        <view class="icon icon--user">
+          <view class="icon-user__head"></view>
+          <view class="icon-user__body"></view>
+        </view>
+        <input
+          class="field__input"
+          value="{{username}}"
+          placeholder="请输入账号"
+          placeholder-class="field__placeholder"
+          maxlength="20"
+          data-field="username"
+          bindfocus="onFocus"
+          bindblur="onBlur"
+          bindinput="onUsername"
+        />
+      </view>
+      <view wx:if="{{errors.username}}" class="field__error">{{errors.username}}</view>
+
+      <view class="field {{errors.password ? 'field--error' : ''}} {{focused === 'password' ? 'field--focus' : ''}}">
+        <view class="icon icon--lock">
+          <view class="icon-lock__shackle"></view>
+          <view class="icon-lock__body"></view>
+        </view>
+        <input
+          class="field__input"
+          value="{{password}}"
+          password="{{!showPassword}}"
+          placeholder="请输入密码"
+          placeholder-class="field__placeholder"
+          maxlength="20"
+          data-field="password"
+          bindfocus="onFocus"
+          bindblur="onBlur"
+          bindinput="onPassword"
+        />
+        <view class="eye" bindtap="togglePassword">
+          <view class="eye__outer"></view>
+          <view class="eye__pupil"></view>
+          <view wx:if="{{!showPassword}}" class="eye__slash"></view>
+        </view>
+      </view>
+      <view wx:if="{{errors.password}}" class="field__error">{{errors.password}}</view>
+
+      <view wx:if="{{errorMsg}}" class="form-error">{{errorMsg}}</view>
+
+      <button
+        class="btn-gradient"
+        loading="{{accountLoading}}"
+        disabled="{{accountLoading}}"
+        bindtap="handleAccountLogin"
+      >
+        {{accountLoading ? '登录中...' : '登 录'}}
+      </button>
+
+      <view class="trouble" bindtap="contactService">忘记密码？请联系客服重置</view>
+    </block>
+
+    <!-- 底部链接 -->
+    <view class="links">
+      <text class="links__text">还没有账号？</text>
+      <text class="links__action" bindtap="goRegister">立即注册</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="footer__link" bindtap="contactService">遇到问题？联系客服</text>
+    <view class="footer__tip">登录即表示同意《用户协议》与《隐私政策》</view>
+    <view class="footer__brand">北华大学 · 计算机科学技术学院</view>
+  </view>
+</view>

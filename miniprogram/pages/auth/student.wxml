@@ -1,0 +1,107 @@
+<!-- 文件路径: miniprogram/pages/auth/student.wxml -->
+<view class="container">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>正在加载认证状态…</view>
+  </view>
+
+  <block wx:else>
+    <!-- 状态卡片 -->
+    <view class="status-card {{verified ? 'status-card--pass' : status === 2 ? 'status-card--reject' : 'status-card--wait'}}">
+      <view class="status-card__title">
+        {{verified ? '已通过学生认证' : statusLabel}}
+      </view>
+      <view class="status-card__desc">
+        <block wx:if="{{verified}}">你已拥有发布商品权限，可在售商品上限 10 件。</block>
+        <block wx:elif="{{status === 0}}">申请已提交，请耐心等待管理员审核。</block>
+        <block wx:elif="{{status === 2}}">驳回原因：{{rejectReason || '未填写'}}</block>
+        <block wx:else>完成认证后可发布商品，并享受学生优先推荐。</block>
+      </view>
+      <view wx:if="{{applyInfo && applyInfo.studentNo}}" class="status-card__meta">
+        学号 {{applyInfo.studentNo}} · {{applyInfo.realName}}
+        <text wx:if="{{applyInfo.applyTime}}"> · 提交于 {{applyInfo.applyTime}}</text>
+      </view>
+    </view>
+
+    <!-- 待审核/已认证时不展示表单 -->
+    <view wx:if="{{!verified && status !== 0}}" class="card">
+      <view class="card__title">提交认证资料</view>
+
+      <view class="field">
+        <view class="field__label">学号<text class="required">*</text></view>
+        <input
+          class="field__input"
+          value="{{form.studentNo}}"
+          data-field="studentNo"
+          bindinput="onInput"
+          maxlength="30"
+          placeholder="请输入学号，如 202315020114"
+          placeholder-class="ph"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field__label">真实姓名<text class="required">*</text></view>
+        <input
+          class="field__input"
+          value="{{form.realName}}"
+          data-field="realName"
+          bindinput="onInput"
+          maxlength="30"
+          placeholder="请输入与学生证一致的姓名"
+          placeholder-class="ph"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field__label">学校</view>
+        <input
+          class="field__input"
+          value="{{form.school}}"
+          data-field="school"
+          bindinput="onInput"
+          maxlength="100"
+          placeholder="请输入学校全称"
+          placeholder-class="ph"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field__label">学生证照片<text class="required">*</text></view>
+        <view class="uploader" bindtap="chooseImage">
+          <block wx:if="{{certPreview}}">
+            <image class="uploader__img" src="{{certPreview}}" mode="aspectFill" bindtap="previewCert" />
+            <view class="uploader__mask">点击更换</view>
+          </block>
+          <block wx:else>
+            <view class="uploader__plus">+</view>
+            <view class="uploader__text">{{uploading ? '上传中…' : '上传学生证内页'}}</view>
+          </block>
+        </view>
+        <view class="field__hint">照片需清晰可见姓名、学号与学校公章，仅用于身份审核</view>
+      </view>
+
+      <button
+        class="btn-primary submit-btn"
+        disabled="{{!canSubmit || submitting || uploading}}"
+        loading="{{submitting}}"
+        bindtap="handleSubmit"
+      >
+        {{submitting ? '提交中…' : '提交认证申请'}}
+      </button>
+
+      <view class="tips">
+        提交即表示你确认所填信息真实有效。提供虚假信息将被取消发布权限。
+      </view>
+    </view>
+
+    <view wx:if="{{verified}}" class="card">
+      <view class="card__title">认证权益</view>
+      <view class="benefit">· 发布二手商品（上限 10 件在售）</view>
+      <view class="benefit">· 商品展示"学生认证"专属徽章</view>
+      <view class="benefit">· 首页与搜索列表优先推荐</view>
+      <button class="btn-ghost submit-btn" bindtap="goBack">返回</button>
+    </view>
+  </block>
+</view>

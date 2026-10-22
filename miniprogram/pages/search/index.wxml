@@ -1,0 +1,131 @@
+<!-- 文件路径: miniprogram/pages/search/index.wxml -->
+<view class="page">
+  <!-- 搜索栏 -->
+  <view class="searchbar">
+    <view class="searchbar__box">
+      <text class="searchbar__icon">🔍</text>
+      <input
+        class="searchbar__input"
+        value="{{keyword}}"
+        focus="{{focus}}"
+        confirm-type="search"
+        placeholder="搜索商品名称、描述"
+        placeholder-class="searchbar__ph"
+        bindinput="onInput"
+        bindconfirm="doSearch"
+      />
+      <text wx:if="{{keyword}}" class="searchbar__clear" catchtap="clearKeyword">✕</text>
+    </view>
+    <view class="searchbar__cancel" bindtap="back">取消</view>
+  </view>
+
+  <!-- 未搜索：历史 + 热门 -->
+  <block wx:if="{{!searched}}">
+    <view wx:if="{{history.length}}" class="block">
+      <view class="block__head">
+        <text class="block__title">搜索历史</text>
+        <text class="block__action" bindtap="clearHistory">清空</text>
+      </view>
+      <view class="tags">
+        <view
+          wx:for="{{history}}"
+          wx:key="*this"
+          class="tag"
+          data-keyword="{{item}}"
+          bindtap="onKeywordTap"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="block">
+      <view class="block__head">
+        <text class="block__title">热门搜索</text>
+      </view>
+      <view class="tags">
+        <view
+          wx:for="{{hotWords}}"
+          wx:key="*this"
+          class="tag tag--hot"
+          data-keyword="{{item}}"
+          bindtap="onKeywordTap"
+        >{{item}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 搜索结果 -->
+  <block wx:else>
+    <view class="filterbar">
+      <view class="filterbar__item {{sortKey === 'default' ? 'filterbar__item--active' : ''}}" data-key="default" bindtap="onSortTap">综合</view>
+      <view class="filterbar__item {{sortKey === 'new' ? 'filterbar__item--active' : ''}}" data-key="new" bindtap="onSortTap">最新</view>
+      <view class="filterbar__item {{sortKey === 'price' ? 'filterbar__item--active' : ''}}" data-key="price" bindtap="onSortTap">
+        价格<text class="filterbar__arrow">{{sortKey === 'price' && !priceAsc ? '↑' : '↓'}}</text>
+      </view>
+      <view class="filterbar__item filterbar__item--filter {{showFilter ? 'filterbar__item--active' : ''}}" bindtap="toggleFilter">
+        筛选<text class="filterbar__arrow">{{showFilter ? '▴' : '▾'}}</text>
+      </view>
+    </view>
+
+    <!-- 筛选面板 -->
+    <view wx:if="{{showFilter}}" class="panel">
+      <view class="panel__group">
+        <view class="panel__label">分类</view>
+        <view class="panel__options">
+          <view class="chip {{categoryId === null ? 'chip--active' : ''}}" data-id="{{null}}" bindtap="onCategoryTap">全部</view>
+          <view
+            wx:for="{{categories}}"
+            wx:key="id"
+            class="chip {{categoryId === item.id ? 'chip--active' : ''}}"
+            data-id="{{item.id}}"
+            bindtap="onCategoryTap"
+          >{{item.name}}</view>
+        </view>
+      </view>
+      <view class="panel__group">
+        <view class="panel__label">价格</view>
+        <view class="panel__options">
+          <view
+            wx:for="{{priceRanges}}"
+            wx:key="label"
+            class="chip {{priceIndex === index ? 'chip--active' : ''}}"
+            data-index="{{index}}"
+            bindtap="onPriceTap"
+          >{{item.label}}</view>
+        </view>
+      </view>
+      <view class="panel__foot">
+        <text class="panel__reset" bindtap="resetFilter">重置</text>
+        <text class="panel__done" bindtap="toggleFilter">收起</text>
+      </view>
+    </view>
+
+    <view class="summary">共找到 {{total}} 件商品</view>
+
+    <view wx:if="{{loading}}" class="loading-wrap">
+      <view class="spinner"></view>
+      <view>搜索中…</view>
+    </view>
+
+    <view wx:elif="{{!left.length && !right.length}}" class="empty">
+      <view class="empty__icon">🔍</view>
+      <view>没有找到「{{keyword}}」相关的商品</view>
+      <view class="empty__tip">换个关键词，或放宽价格与分类筛选</view>
+      <view class="empty__btn" bindtap="resetFilter">重置筛选条件</view>
+    </view>
+
+    <view wx:else class="waterfall">
+      <view class="waterfall__col">
+        <product-card wx:for="{{left}}" wx:key="id" item="{{item}}" />
+      </view>
+      <view class="waterfall__col">
+        <product-card wx:for="{{right}}" wx:key="id" item="{{item}}" />
+      </view>
+    </view>
+
+    <view wx:if="{{left.length || right.length}}" class="loadmore">
+      <text wx:if="{{loadingMore}}">加载中…</text>
+      <text wx:elif="{{!hasMore}}">— 没有更多了 —</text>
+      <text wx:else>上拉加载更多</text>
+    </view>
+  </block>
+</view>

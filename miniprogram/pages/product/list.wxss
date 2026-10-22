@@ -1,0 +1,136 @@
+/* 文件路径: miniprogram/pages/product/list.wxss */
+
+.page {
+  min-height: 100vh;
+  padding: 0 32rpx 60rpx;
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+
+.filter {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  margin: 0 -32rpx;
+  padding: 18rpx 24rpx;
+  background: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03);
+}
+
+.filter__item {
+  display: flex;
+  align-items: center;
+  margin-right: 34rpx;
+  font-size: 26rpx;
+  color: #555;
+  max-width: 240rpx;
+}
+
+.filter__text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.filter__item--active {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.filter__arrow {
+  font-size: 18rpx;
+  margin-left: 6rpx;
+}
+
+.pricepanel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #fff;
+  padding: 20rpx 24rpx 6rpx;
+}
+
+.chip {
+  padding: 8rpx 26rpx;
+  margin: 0 16rpx 14rpx 0;
+  border-radius: 28rpx;
+  background: #f5f5f5;
+  font-size: 24rpx;
+  color: #555;
+}
+
+.chip--active {
+  background: #fff3ee;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.pricepanel__reset {
+  margin-left: auto;
+  margin-bottom: 14rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.summary {
+  padding: 18rpx 4rpx 16rpx;
+  font-size: 23rpx;
+  color: #999;
+}
+
+.waterfall {
+  display: flex;
+  justify-content: space-between;
+}
+
+.waterfall__col {
+  width: calc(50% - 8rpx);
+}
+
+.loadmore {
+  padding: 28rpx 0 10rpx;
+  text-align: center;
+  font-size: 23rpx;
+  color: #b0b0b0;
+}
+
+.empty {
+  padding: 140rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.empty__icon {
+  font-size: 80rpx;
+  margin-bottom: 18rpx;
+}
+
+.empty__btn {
+  display: inline-block;
+  margin-top: 26rpx;
+  padding: 0 40rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  border-radius: 32rpx;
+  border: 1rpx solid #ff6b35;
+  color: #ff6b35;
+  font-size: 25rpx;
+}
+
+.totop {
+  position: fixed;
+  right: 32rpx;
+  bottom: 180rpx;
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #ff6b35;
+  font-size: 36rpx;
+  text-align: center;
+  line-height: 80rpx;
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.12);
+}

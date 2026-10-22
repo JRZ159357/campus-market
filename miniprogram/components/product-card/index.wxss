@@ -1,0 +1,112 @@
+/* 文件路径: miniprogram/components/product-card/index.wxss */
+.pcard {
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.pcard__cover {
+  position: relative;
+  width: 100%;
+  background: #f7f7f7;
+  font-size: 0;
+}
+
+.pcard__img {
+  width: 100%;
+  display: block;
+}
+
+.pcard__badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 6rpx 14rpx;
+  font-size: 20rpx;
+  color: #fff;
+  line-height: 1.3;
+  background: linear-gradient(135deg, #ff6b35, #ff9a6b);
+  border-bottom-right-radius: 16rpx;
+}
+
+.pcard__body {
+  padding: 16rpx 18rpx 18rpx;
+}
+
+.pcard__title {
+  font-size: 27rpx;
+  color: #333;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 78rpx;
+}
+
+.pcard__price {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10rpx;
+}
+
+.pcard__yuan {
+  color: #ff6b35;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.pcard__num {
+  color: #ff6b35;
+  font-size: 36rpx;
+  font-weight: 700;
+  margin-left: 2rpx;
+}
+
+.pcard__origin {
+  margin-left: 10rpx;
+  font-size: 22rpx;
+  color: #bbb;
+  text-decoration: line-through;
+}
+
+.pcard__foot {
+  display: flex;
+  align-items: center;
+  margin-top: 14rpx;
+}
+
+.pcard__avatar {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  flex: none;
+}
+
+.pcard__avatar--text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffd0bf, #ffb59b);
+  color: #fff;
+  font-size: 20rpx;
+}
+
+.pcard__seller {
+  margin-left: 10rpx;
+  font-size: 21rpx;
+  color: #999;
+  max-width: 150rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pcard__views {
+  margin-left: auto;
+  font-size: 20rpx;
+  color: #bbb;
+}

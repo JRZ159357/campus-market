@@ -1,0 +1,145 @@
+<!-- 文件路径: miniprogram/pages/publish/index.wxml -->
+<view class="publish">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="spinner"></view>
+    <view>加载中…</view>
+  </view>
+
+  <!-- 未认证引导 -->
+  <view wx:elif="{{!verified}}" class="guard">
+    <view class="guard__icon">🎓</view>
+    <view class="guard__title">发布商品需要先完成学生认证</view>
+    <view class="guard__desc">认证通过后即可发布闲置，并享受优先推荐</view>
+    <button class="btn-primary guard__btn" bindtap="guideAuth">去认证</button>
+  </view>
+
+  <block wx:else>
+    <scroll-view scroll-y class="form">
+      <!-- 图片上传 -->
+      <view class="section">
+        <view class="section__head">
+          <text class="section__title">商品图片<text class="required">*</text></text>
+          <text class="section__tip">{{images.length}}/9 · 第一张为主图</text>
+        </view>
+        <view class="images">
+          <view class="image-item" wx:for="{{images}}" wx:key="url">
+            <image
+              class="image-item__img"
+              src="{{item.full}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              bindtap="previewImage"
+            />
+            <view wx:if="{{index === 0}}" class="image-item__badge">主图</view>
+            <view class="image-item__del" data-index="{{index}}" catchtap="removeImage">×</view>
+            <view class="image-item__move">
+              <text class="image-item__arrow" data-index="{{index}}" data-dir="-1" catchtap="moveImage">‹</text>
+              <text class="image-item__arrow" data-index="{{index}}" data-dir="1" catchtap="moveImage">›</text>
+            </view>
+          </view>
+          <view wx:if="{{images.length < 9}}" class="image-add" bindtap="chooseImage">
+            <text class="image-add__plus">+</text>
+            <text class="image-add__text">添加图片</text>
+          </view>
+        </view>
+        <view class="section__hint">支持左右箭头调整顺序，长按图片可预览</view>
+      </view>
+
+      <!-- 标题 -->
+      <view class="section">
+        <view class="section__head">
+          <text class="section__title">商品标题<text class="required">*</text></text>
+          <text class="section__tip">{{title.length}}/30</text>
+        </view>
+        <input
+          class="input"
+          value="{{title}}"
+          maxlength="30"
+          placeholder="如：九成新山地自行车，校内自提"
+          bindinput="onTitleInput"
+        />
+      </view>
+
+      <!-- 分类 -->
+      <view class="section">
+        <view class="section__head">
+          <text class="section__title">商品分类<text class="required">*</text></text>
+        </view>
+        <scroll-view scroll-x class="cats" enable-flex>
+          <view
+            wx:for="{{categories}}"
+            wx:key="id"
+            class="cat {{categoryId === item.id ? 'cat--active' : ''}}"
+            data-id="{{item.id}}"
+            bindtap="selectCategory"
+          >
+            <image wx:if="{{item.isImage}}" class="cat__icon" src="{{item.iconFull}}" mode="aspectFit" />
+            <text wx:else class="cat__icon-text">{{item.icon}}</text>
+            <text class="cat__name">{{item.name}}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 价格 -->
+      <view class="section">
+        <view class="section__head">
+          <text class="section__title">价格<text class="required">*</text></text>
+        </view>
+        <view class="price-field">
+          <text class="price-field__symbol">¥</text>
+          <input
+            class="price-field__input"
+            type="digit"
+            value="{{price}}"
+            placeholder="0.00"
+            bindinput="onPriceInput"
+          />
+        </view>
+        <view class="price-original">
+          <text class="price-original__label">原价</text>
+          <text class="price-original__symbol">¥</text>
+          <input
+            class="price-original__input"
+            type="digit"
+            value="{{originalPrice}}"
+            placeholder="选填，展示划线价"
+            bindinput="onOriginalPriceInput"
+          />
+        </view>
+      </view>
+
+      <!-- 描述 -->
+      <view class="section">
+        <view class="section__head">
+          <text class="section__title">商品描述</text>
+          <text class="section__tip">{{description.length}}/500</text>
+        </view>
+        <textarea
+          class="textarea"
+          value="{{description}}"
+          maxlength="500"
+          placeholder="描述一下成色、入手时间、交易方式等，真实描述更容易卖出"
+          bindinput="onDescInput"
+          auto-height
+        />
+      </view>
+
+      <view class="quota-tip">
+        同时在架与待审核商品最多 {{publishLimit}} 件，当前剩余 {{publishRemain}} 件
+      </view>
+      <view class="bottom-space"></view>
+    </scroll-view>
+
+    <!-- 底部固定提交栏 -->
+    <view class="bottom-bar">
+      <view class="bottom-bar__info">
+        <text class="bottom-bar__label">发布后需管理员审核</text>
+        <text class="bottom-bar__sub">审核通过后自动上架</text>
+      </view>
+      <button class="btn-primary bottom-bar__btn" loading="{{submitting}}" bindtap="submit">
+        {{editId ? '保存并重新提交' : '立即发布'}}
+      </button>
+    </view>
+  </block>
+</view>
